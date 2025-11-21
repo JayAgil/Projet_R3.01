@@ -1,7 +1,7 @@
 <?php
 class joueur {
 
-    require_once "database.php";
+    require_once "r301php2025_db";
 
     private $numero_licence;
     private $statut;
