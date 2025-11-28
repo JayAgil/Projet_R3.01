@@ -5,7 +5,7 @@
     public function __construct() {
         try {
             $db = 'r301php2025_db';
-            $server = 'mysql-r301php2025.alwaysdata.net';
+            $server = 'mysql.alwaysdata.com/';
             $login = '442017';
             $mdp = '!@#$1234abcd';
             $this->linkpdo = new PDO("mysql:host=$server;dbname=$db", $login, $mdp); 
@@ -114,20 +114,20 @@
 
 }
 
-    public function updateStatut($date, $heure, $nouveauStatut) {
-        $req = $this->linkpdo->prepare(
-            "UPDATE Match_Basketball 
-            SET Statut = :statut
-            WHERE DateDeMatch = :d AND HeureDeMatch = :heure"
-        );
+public function updateStatut($date, $heure, $nouveauStatut) {
+    $req = $this->linkpdo->prepare(
+        "UPDATE Match_Basketball 
+         SET Statut = :statut
+         WHERE DateDeMatch = :d AND HeureDeMatch = :heure"
+    );
 
-        return $req->execute([
-            ":statut" => $nouveauStatut,
-            ":d"   => $date,
-            ":heure"  => $heure
-        ]);
+    return $req->execute([
+        ":statut" => $nouveauStatut,
+        ":d"   => $date,
+        ":heure"  => $heure
+    ]);
 
-    }
+}
 
     public function updateResultat($date, $heure, $nouveauRes) {
         $req = $this->linkpdo->prepare(
@@ -146,10 +146,43 @@
 
     public function deleteMatch($date, $heure){
         $req = $this->linkpdo->prepare('DELETE FROM Match_Basketball WHERE DateDeMatch = :d AND HeureDeMatch = :h');
-        return $req->execute(array('d' => $date, 'h' => $heure));
+        return $req->execute(['d' => $date, 'h' => $heure]);
     }
 
-}
+    }
+
+    public function getMoyennePointsAdversaire() {
+            $stmt = $this->pdo->query("
+                SELECT AVG(PointsMarquesParAdversaire) AS MoyennePointsAdversaire
+                FROM Match_Basketball
+            ");
+            return $stmt->fetch(PDO::FETCH_ASSOC)['MoyennePointsAdversaire'];
+    }
+
+    public function getMatchsAvenir() {
+            $stmt = $this->pdo->query("
+                SELECT * 
+                FROM Match_Basketball
+                WHERE Statut IN ('Avenir','Prepare')
+                ORDER BY DateDeMatch, HeureDeMatch
+            ");
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getTopScorers() {
+        $stmt = $this->pdo->prepare("
+            SELECT j.NumeroLicence, j.Nom, j.Prenom, SUM(p.NbPointsMarque) AS TotalPoints
+            FROM Participer p
+            JOIN Joueur j ON p.NumeroLicence = j.NumeroLicence
+            WHERE p.Joue = TRUE
+            GROUP BY j.NumeroLicence
+            ORDER BY TotalPoints DESC
+            LIMIT 5
+        ");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 
 
 ?>
