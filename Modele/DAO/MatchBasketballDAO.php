@@ -5,7 +5,7 @@
     public function __construct() {
         try {
             $db = 'r301php2025_db';
-            $server = 'mysql.alwaysdata.com/';
+            $server = 'mysql-r301php2025.alwaysdata.net';
             $login = '442017';
             $mdp = '!@#$1234abcd';
             $this->linkpdo = new PDO("mysql:host=$server;dbname=$db", $login, $mdp); 
@@ -114,40 +114,40 @@
 
 }
 
-public function updateStatut($date, $heure, $nouveauStatut) {
-    $req = $this->linkpdo->prepare(
-        "UPDATE Match_Basketball 
-         SET Statut = :statut
-         WHERE DateDeMatch = :d AND HeureDeMatch = :heure"
-    );
+    public function updateStatut($date, $heure, $nouveauStatut) {
+        $req = $this->linkpdo->prepare(
+            "UPDATE Match_Basketball 
+            SET Statut = :statut
+            WHERE DateDeMatch = :d AND HeureDeMatch = :heure"
+        );
 
-    return $req->execute([
-        ":statut" => $nouveauStatut,
-        ":d"   => $date,
-        ":heure"  => $heure
-    ]);
+        return $req->execute([
+            ":statut" => $nouveauStatut,
+            ":d"   => $date,
+            ":heure"  => $heure
+        ]);
 
-}
+    }
 
-public function updateResultat($date, $heure, $nouveauRes) {
-    $req = $this->linkpdo->prepare(
-        "UPDATE Match_Basketball 
-         SET Resultat = :resultat
-         WHERE DateDeMatch = :d AND HeureDeMatch = :heure"
-    );
+    public function updateResultat($date, $heure, $nouveauRes) {
+        $req = $this->linkpdo->prepare(
+            "UPDATE Match_Basketball 
+            SET Resultat = :resultat
+            WHERE DateDeMatch = :d AND HeureDeMatch = :heure"
+        );
 
-    return $req->execute(array(
-        ":resultat" => $nouveauRes,
-        ":d"   => $date,
-        ":heure"  => $heure
-    ));
+        return $req->execute(array(
+            ":resultat" => $nouveauRes,
+            ":d"   => $date,
+            ":heure"  => $heure
+        ));
 
-}
+    }
 
-public function deleteMatch($date, $heure){
-    $req = $this->linkpdo->prepare('DELETE FROM Match_Basketball WHERE DateDeMatch = :d AND HeureDeMatch = :h');
-    return $req->execute(array('d' => $date, 'h' => $heure));
-}
+    public function deleteMatch($date, $heure){
+        $req = $this->linkpdo->prepare('DELETE FROM Match_Basketball WHERE DateDeMatch = :d AND HeureDeMatch = :h');
+        return $req->execute(array('d' => $date, 'h' => $heure));
+    }
 
 }
 

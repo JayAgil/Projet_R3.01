@@ -1,5 +1,5 @@
 <?php
-class participer {
+class Participer {
     private $numero_licence;
     private $date_match;
     private $heure_match;
