@@ -1,5 +1,5 @@
 <?php
-class joueur {
+class Joueur {
 
     private $numero_licence;
     private $statut;
