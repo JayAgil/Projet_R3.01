@@ -52,6 +52,23 @@
         $this->bindParticiper($stmt, $p); 
         return $stmt->execute();
     }
+
+    public function getJoueurQuiJoue(String $date, String $heure) {
+        $req = $this->linkpdo->query('SELECT * FROM Participer WHERE DateDeMatch = :d AND HeureDeMatch = :h AND Joue = 1');
+        $stmt = $this->pdo->prepare($req);
+        $stmt->execute([':d' => $date, ':h' => $heure]);
+        return array_map([$this, 'mapRowToParticiper'], $stmt->fetchAll(PDO::FETCH_ASSOC));
+    }
+
+    public function getRangJoueurPoints(): array {
+            $req = "SELECT NumeroLicence, SUM(NbPointsMarque) AS totalPoints
+            FROM Participer
+            GROUP BY NumeroLicence
+            ORDER BY totalPoints DESC";
+            return $this->pdo->query($req)->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
     }
 
 
