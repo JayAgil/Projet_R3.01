@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="../css/login.css">
+</head>
+<body>
+
+<div class="login-container">
+    <form action="../index.php" method="POST" class="login-form">
+        <h2>Connexion</h2>
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="password" name="mdp" placeholder="Mot de passe" required>
+        <input type="submit" value="Se connecter">
+    </form>
+</div>
+
+</body>
+</html>
