@@ -15,6 +15,9 @@
         <input type="submit" value="Se connecter">
     </form>
 </div>
-
+<?php 
+    if (!empty($erreur)) : ?>
+    <p><?php echo $erreur ?></p>;
+<?php endif; ?>
 </body>
 </html>
