@@ -3,7 +3,7 @@
 class GestionFenetrePrincipale {
 
     public function afficherFenetrePrincipale() {
-        require "views/fenetreprincipale.php";
+        require "Vue/FenetrePrincipale.php";
     }
 
 }
