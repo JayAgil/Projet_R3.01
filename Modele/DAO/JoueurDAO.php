@@ -88,13 +88,13 @@ class JoueurDAO {
             LIMIT 1
         ";
         
-        $stmt = $this->pdo->prepare($sql);
+        $stmt = $this->linkpdo->prepare($sql);
         $stmt->execute(['poste' => $poste]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function getAverageNote($numeroLicence) {
-        $stmt = $this->pdo->prepare("
+        $stmt = $this->linkpdo->prepare("
             SELECT AVG(Note) AS MoyenneNote
             FROM Participer
             WHERE NumeroLicence = :numeroLicence AND Joue = TRUE
@@ -104,7 +104,7 @@ class JoueurDAO {
     }
 
     public function getNombreTitularisations($numeroLicence) {
-        $stmt = $this->pdo->prepare("
+        $stmt = $this->linkpdo->prepare("
             SELECT COUNT(*) AS Nombre
             FROM Participer
             WHERE NumeroLicence = :numeroLicence AND EstTitulaire = TRUE AND Joue = TRUE
@@ -114,7 +114,7 @@ class JoueurDAO {
     }
 
     public function getNombreRemplacements($numeroLicence) {
-        $stmt = $this->pdo->prepare("
+        $stmt = $this->linkpdo->prepare("
             SELECT COUNT(*) AS Nombre
             FROM Participer
             WHERE NumeroLicence = :numeroLicence AND EstTitulaire = FALSE AND Joue = TRUE
@@ -124,7 +124,7 @@ class JoueurDAO {
     }
     
     public function getNombreMatchsJoues($numeroLicence) {
-        $stmt = $this->pdo->prepare("
+        $stmt = $this->linkpdo->prepare("
             SELECT COUNT(*) AS Nombre
             FROM Participer
             WHERE NumeroLicence = :numeroLicence AND Joue = TRUE
@@ -134,7 +134,7 @@ class JoueurDAO {
     }
 
     public function getPostePrefere($numeroLicence) {
-        $stmt = $this->pdo->prepare("
+        $stmt = $this->linkpdo->prepare("
             SELECT PosteOccupee, AVG(Note) AS MoyenneNote
             FROM Participer
             WHERE NumeroLicence = :numeroLicence AND Joue = TRUE
@@ -147,7 +147,7 @@ class JoueurDAO {
     }
 
     public function getPourcentageVictoires($numeroLicence) {
-        $stmt = $this->pdo->prepare("
+        $stmt = $this->linkpdo->prepare("
             SELECT 
                 SUM(CASE WHEN m.Resultat = 'Victoire' THEN 1 ELSE 0 END)/COUNT(*)*100 AS PourcentageVictoires
             FROM Participer p
@@ -159,7 +159,7 @@ class JoueurDAO {
     }
 
      public function getTotalPoints($numeroLicence) {
-        $stmt = $this->pdo->prepare("
+        $stmt = $this->linkpdo->prepare("
             SELECT SUM(NbPointsMarque) AS TotalPoints
             FROM Participer
             WHERE NumeroLicence = :numeroLicence AND Joue = TRUE
@@ -169,14 +169,14 @@ class JoueurDAO {
     }
 
     public function getActivePlayers() {
-        $stmt = $this->pdo->query("
+        $stmt = $this->linkpdo->query("
             SELECT * FROM Joueur WHERE Statut = 'Actif'
         ");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getInactivePlayers() {
-        $stmt = $this->pdo->query("
+        $stmt = $this->linkpdo->query("
             SELECT * FROM Joueur WHERE Statut != 'Actif'
         ");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
