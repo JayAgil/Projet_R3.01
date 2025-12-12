@@ -1,3 +1,24 @@
+<?php
+    require_once 'MatchBasketballDAO.php';
+    require_once 'JoueurDAO.php';
+    require_once 'ParticiperDAO.php';
+
+    $matchDAO = new MatchBasketballDAO();
+    $joueurDAO = new JoueurDAO();
+    $participerDAO = new ParticiperDAO();
+
+    $totalMatchs = count($matchDAO->getAllMatches());  
+    $matchsCeMois = $matchDAO->getNbMatchCeMois();     
+    $victoires = $matchDAO->getNbMatch("Victoire");    
+    $defaites = $matchDAO->getNbMatch("Défaite");     
+    $totalJoueurs = count($joueurDAO->getAllJoueurs()); 
+
+    $matchsAvenir = $matchDAO->getMatchsAvenir();       
+    $recentResults = $matchDAO->getAllMatches();        
+    $topPlayers = $matchDAO->getTopScorers();  
+?>
+
+
 <!doctype html>
 <html lang="fr">
 <head>
@@ -55,29 +76,29 @@
     <!-- CONTENT -->
     <section class="content">
 
-      <!-- CARDS -->
-      <div class="cards">
+        <div class="cards">
 
-        <div class="card">
-          <div class="card-title">Total Joueurs</div>
-          <div class="card-value">42</div>
+            <div class="card">
+                <div class="card-title">Total Joueurs</div>
+                <div class="card-value"><?= $totalJoueurs ?></div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Total Matchs</div>
+                <div class="card-value"><?= $totalMatchs ?></div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Matchs Prévu</div>
+                <div class="card-value"><?= count($matchsAvenir) ?></div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Matchs Terminés</div>
+                <div class="card-value"><?= $victoires + $defaites ?></div>
+            </div>
         </div>
 
-        <div class="card">
-          <div class="card-title">Total Matchs</div>
-          <div class="card-value">18</div>
-        </div>
-
-        <div class="card">
-          <div class="card-title">Matchs Prévu</div>
-          <div class="card-value">4</div>
-        </div>
-
-        <div class="card">
-          <div class="card-title">Matchs Terminés</div>
-          <div class="card-value">14</div>
-        </div>
-      </div>
 
       <!-- UPCOMING MATCHES -->
       <div class="panel">
@@ -85,36 +106,34 @@
           <h2>Prochains Matchs</h2>
         </div>
 
+        <!-- Match Avenir -->
         <table class="table">
-          <thead>
+        <thead>
             <tr>
-              <th>Date</th>
-              <th>Heure</th>
-              <th>Adversaire</th>
-              <th>Lieu</th>
-              <th>Statut</th>
+            <th>Date</th>
+            <th>Heure</th>
+            <th>Adversaire</th>
+            <th>Lieu</th>
+            <th>Statut</th>
             </tr>
-          </thead>
-          <tbody>
+        </thead>
+        <tbody>
+            <?php foreach($matchsAvenir as $m): ?>
             <tr>
-              <td>15/01/2025</td>
-              <td>18:00</td>
-              <td>Tigers</td>
-              <td>Domicile</td>
-              <td><span class="status avenir">À venir</span></td>
+                <td><?= $m['DateDeMatch'] ?></td>
+                <td><?= $m['HeureDeMatch'] ?></td>
+                <td><?= $m['NomEquipeAdversaire'] ?></td>
+                <td><?= $m['LieuDeRencontre'] ?></td>
+                <td>
+                <span class="status avenir"><?= $m['Statut'] ?></span>
+                </td>
             </tr>
-            <tr>
-              <td>22/01/2025</td>
-              <td>20:30</td>
-              <td>Wolves</td>
-              <td>Extérieur</td>
-              <td><span class="status avenir">À venir</span></td>
-            </tr>
-          </tbody>
+            <?php endforeach; ?>
+        </tbody>
         </table>
-      </div>
 
-      <!-- RECENT RESULTS -->
+
+      <!-- Resultat -->
       <div class="panel">
         <div class="panel-header">
           <h2>Résultats Récents</h2>
