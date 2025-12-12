@@ -60,6 +60,17 @@ class JoueurDAO {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function search($search) {
+        $sql = "SELECT * FROM joueurs
+                WHERE Nom LIKE :search
+                   OR Prenom LIKE :search
+                   OR NumeroLicence LIKE :search
+                   OR Statut LIKE :search";
+        $stmt = $this->linkpdo->prepare($sql);
+        $stmt->execute(['search' => '%' . $search . '%']);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function get10PlusGrandTaille() {
         $stmt = $this->linkpdo->query("SELECT Nom, Prenom, Taille_cm FROM Joueur ORDER BY Taille_cm DESC LIMIT 10");
         return $stmt->fetch(PDO::FETCH_ASSOC);
