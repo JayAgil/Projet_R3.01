@@ -25,7 +25,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Gestionnaire des Matchs – Dashboard</title>
-  <link rel="stylesheet" href="css/principale.css" />
+  <link rel="stylesheet" href="../css/principale.css" />
 </head>
 <body>
 

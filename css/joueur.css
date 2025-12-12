@@ -1,0 +1,61 @@
+
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    position: fixed;
+    width: 220px; 
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+.main-content {
+    margin-left: 220px; 
+    padding: 20px;
+    background-color: rgba(240, 240, 240, 0.8);
+    min-height: 100vh;
+}
+
+.nav .nav-item {
+    display: block;
+    color: white;
+    text-decoration: none;
+    margin: 10px 0;
+}
+.nav .nav-item.active {
+    font-weight: bold;
+}
+
+.joueur {
+    width: fit-content;
+}
+
+.joueur h1,
+.rechercher {
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+
+.joueur table {
+    border-collapse: collapse;
+    margin: 0 auto; 
+    width: 100%;
+}
+
+.joueur table th, .joueur table td {
+    padding: 8px;
+    border: 1px solid #ccc;
+    background-color: white; 
+}
+
+.sidebar {
+    position: fixed;
+    height: 100%;
+}
+.main-content {
+    margin-left: 220px; 
+}
