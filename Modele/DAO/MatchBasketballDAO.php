@@ -149,7 +149,7 @@ public function updateStatut($date, $heure, $nouveauStatut) {
         return $req->execute(['d' => $date, 'h' => $heure]);
     }
 
-    }
+    
 
     public function getMoyennePointsAdversaire() {
             $stmt = $this->pdo->query("
@@ -183,6 +183,6 @@ public function updateStatut($date, $heure, $nouveauStatut) {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-
+    }
 
 ?>

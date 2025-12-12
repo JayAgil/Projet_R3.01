@@ -1,7 +1,7 @@
 <?php
-    require_once 'MatchBasketballDAO.php';
-    require_once 'JoueurDAO.php';
-    require_once 'ParticiperDAO.php';
+    require_once __DIR__ . '/../Modele/DAO/MatchBasketballDAO.php';
+    require_once __DIR__ . '/../Modele/DAO/JoueurDAO.php';
+    require_once __DIR__ . '/../Modele/DAO/ParticiperDAO.php';
 
     $matchDAO = new MatchBasketballDAO();
     $joueurDAO = new JoueurDAO();
