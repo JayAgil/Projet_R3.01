@@ -4,22 +4,14 @@
 
     public function __construct() {
         try {
-<<<<<<< HEAD
-            $db = 'r301php2025_db';
-            $server = 'mysql-r301php2025.alwaysdata.net';
-            $login = '442017';
-            $mdp = '!@#$1234abcd';
-=======
-            $db = 'carnet';
+             $db = 'r301php2025_db';
             $server = 'localhost';
             $login = 'root';
             $mdp = '';
->>>>>>> d590662ad537cdeda883b73a1c6baaccf1449f36
-            $this->linkpdo = new PDO("mysql:host=$server;dbname=$db", $login, $mdp); 
-        }
-        catch (Exception $e) {
-             die('Erreur : ' . $e->getMessage()); 
-
+            $this->linkpdo = new PDO("mysql:host=$server;dbname=$db;charset=utf8", $login, $mdp);
+            $this->linkpdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } catch (Exception $e) {
+            die('Erreur : ' . $e->getMessage());
         }
     }
 
