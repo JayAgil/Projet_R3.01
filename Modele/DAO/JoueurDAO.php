@@ -8,7 +8,7 @@ class JoueurDAO {
 
     public function __construct() {
         try {
-             $db = 'r301php2025_db';
+            $db = 'r301php2025_db';
             $server = 'localhost';
             $login = 'root';
             $mdp = '';
@@ -197,22 +197,10 @@ class JoueurDAO {
     }
 
     public function getAllJoueurs() {
-        $req = $this->linkpdo->query("SELECT * FROM Joueur");
-        $joueurs = [];
-        while ($row = $req->fetch(PDO::FETCH_ASSOC)) {
-            $joueurs[] = new Joueur(
-                $row['NumeroLicence'],
-                $row['Nom'],
-                $row['Prenom'],
-                $row['Statut'],
-                $row['Commentaire'],
-                $row['DateDeNaissance'],
-                $row['Taille_cm'],
-                $row['Poids_kg']
-            );
-        }
-        return $joueurs;
+        $stmt = $this->linkpdo->query("SELECT * FROM Joueur");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
 
 
 
