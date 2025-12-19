@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Table des joueurs</title>
+    <link rel="stylesheet" href="../css/principale.css">
     <link rel="stylesheet" href="../css/joueur.css">
-    <link rel="stylesheet" href="../css/principale.css" />
+
 </head>
 <body>
     <div class="container">
