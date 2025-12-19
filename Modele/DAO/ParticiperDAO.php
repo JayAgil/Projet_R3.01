@@ -1,4 +1,7 @@
 <?php
+require_once __DIR__ . '/../Joueur.class.php';
+require_once __DIR__ . '/../MatchBasketball.class.php';
+require_once __DIR__ . '/../Participer.class.php';
 class ParticiperDAO {
     private $pdo;
 

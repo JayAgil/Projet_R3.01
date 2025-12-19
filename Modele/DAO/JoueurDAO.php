@@ -1,4 +1,7 @@
 <?php
+require_once __DIR__ . '/../Joueur.class.php';
+require_once __DIR__ . '/../MatchBasketball.class.php';
+require_once __DIR__ . '/../Participer.class.php';
 class JoueurDAO {
 
     private $linkpdo;
@@ -193,6 +196,23 @@ class JoueurDAO {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getAllJoueurs() {
+        $req = $this->linkpdo->query("SELECT * FROM Joueur");
+        $joueurs = [];
+        while ($row = $req->fetch(PDO::FETCH_ASSOC)) {
+            $joueurs[] = new Joueur(
+                $row['NumeroLicence'],
+                $row['Nom'],
+                $row['Prenom'],
+                $row['Statut'],
+                $row['Commentaire'],
+                $row['DateDeNaissance'],
+                $row['Taille_cm'],
+                $row['Poids_kg']
+            );
+        }
+        return $joueurs;
+    }
 
 
 
