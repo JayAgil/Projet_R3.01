@@ -1,3 +1,16 @@
+<?php
+    require_once __DIR__ . '/../Modele/DAO/MatchBasketballDAO.php';
+    require_once __DIR__ . '/../Modele/DAO/JoueurDAO.php';
+    require_once __DIR__ . '/../Modele/DAO/ParticiperDAO.php';
+
+    $matchDAO = new MatchBasketballDAO();
+    $joueurDAO = new JoueurDAO();
+    $participerDAO = new ParticiperDAO();
+
+    $joueurs = $joueurDAO->getAllJoueurs();
+?>
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -19,7 +32,6 @@
 
             <nav class="nav">
                 <a class="nav-item active" href="FenetrePrincipale.php"><span class="nav-ico">🏠</span> Dashboard</a>
-                <a class="nav-item" href="fenetre_match.html"><span class="nav-ico">🏀</span> Matchs</a>
                 <a class="nav-item" href="FenetreJoueur.php"><span class="nav-ico">👥</span> Joueurs</a>
             </nav>
 
