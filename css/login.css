@@ -1,61 +1,96 @@
 /* Reset */
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-    margin: 0;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;   /* logo on top, form below */
-    justify-content: center;  /* vertical center */
-    align-items: center;      /* horizontal center */
     font-family: Arial, sans-serif;
+    height: 100vh;
+}
+
+/* Page container: 2 columns */
+.login-page {
+    display: flex;
+    height: 100vh;
+}
+
+/* Left side: background image + welcome text */
+.left-side {
+    flex: 66%; /* 2/3 of the page */
+    background-image: url('../Image/backgroundFenetreLogin.jpg'); /* change to your image */
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.7);
+}
+
+.left-side .welcome-text {
+    text-align: center;
+}
+
+.left-side h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+.left-side p {
+    font-size: 24px;
+}
+
+/* Right side: login form */
+.right-side {
+    flex: 34%; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: white;
-
 }
 
-/* Logo */
-#logo {
-    width: 180px;
-    margin-bottom: 0px;
-}
-
-/* Login container */
+/* Login container (unchanged) */
 .login-container {
     background-color: white;
     padding: 10px 40px 20px 40px;
     border-radius: 15px;
-    border : 2px solid black;
+    border: 2px solid black;
     width: 320px;
     text-align: center;
+
+    /* 3D effect */
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.3),
+                -3px -3px 10px rgba(255,255,255,0.5);
 }
 
-/* Title */
 .login-form h2 {
     color: black;
     margin-bottom: 20px;
 }
 
-/* Inputs */
 .login-form input {
     width: 100%;
     padding: 12px;
     margin: 10px 0;
-    border : 2px solid black;
+    border: 2px solid black;
     border-radius: 6px;
     font-size: 16px;
 }
 
-/* Button */
 .login-form input[type="submit"] {
     background-color: orange;
     color: black;
     font-weight: bold;
     cursor: pointer;
-
 }
 
 .login-form input[type="submit"]:hover {
     background-color: darkorange;
+}
+/* Logo above the form */
+#logo {
+    width: 150px;
+    margin-bottom: 20px;
 }
