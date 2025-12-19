@@ -41,7 +41,6 @@
 
     <nav class="nav">
       <a class="nav-item active" href="FenetrePrincipale.php"><span class="nav-ico">🏠</span> Dashboard</a>
-      <a class="nav-item" href="fenetre_match.php"><span class="nav-ico">🏀</span> Matchs</a>s
       <a class="nav-item" href="FenetreJoueur.php"><span class="nav-ico">👥</span> Joueurs</a>
   </nav>
 
