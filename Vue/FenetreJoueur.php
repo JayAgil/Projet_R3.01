@@ -18,10 +18,9 @@
             </div>
 
             <nav class="nav">
-                <a class="nav-item active" href="#"><span class="nav-ico">🏠</span> Dashboard</a>
+                <a class="nav-item active" href="FenetrePrincipale.php"><span class="nav-ico">🏠</span> Dashboard</a>
                 <a class="nav-item" href="fenetre_match.html"><span class="nav-ico">🏀</span> Matchs</a>
-                <a class="nav-item" href="feuille_de_match.html"><span class="nav-ico">📄</span> Feuilles de match</a>
-                <a class="nav-item" href="fenetre_joueur.html"><span class="nav-ico">👥</span> Joueurs</a>
+                <a class="nav-item" href="FenetreJoueur.php"><span class="nav-ico">👥</span> Joueurs</a>
             </nav>
 
             <div class="sidebar-footer">
