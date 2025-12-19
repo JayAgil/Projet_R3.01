@@ -4,10 +4,10 @@
 
     public function __construct() {
         try {
-            $db = 'r301php2025_db';
-            $server = 'mysql.alwaysdata.com/';
-            $login = '442017';
-            $mdp = '!@#$1234abcd';
+            $db = 'carnet';
+            $server = 'localhost';
+            $login = 'root';
+            $mdp = '';
             $this->linkpdo = new PDO("mysql:host=$server;dbname=$db", $login, $mdp); 
         }
         catch (Exception $e) {

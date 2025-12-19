@@ -1,29 +1,39 @@
-
-
-/* Full page background */
-body {
-    height: 100vh;
-    background-image: url("../Image/BasketballCourt.jpg");
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: Arial, sans-serif;
+/* Reset */
+* {
+    box-sizing: border-box;
 }
 
-/* Centered form container */
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;   /* logo on top, form below */
+    justify-content: center;  /* vertical center */
+    align-items: center;      /* horizontal center */
+    font-family: Arial, sans-serif;
+    background-color: white;
+
+}
+
+/* Logo */
+#logo {
+    width: 180px;
+    margin-bottom: 0px;
+}
+
+/* Login container */
 .login-container {
-    background-color: rgba(0, 0, 0, 0.5);
-    padding: 40px;
-    border-radius: 20px;
+    background-color: white;
+    padding: 10px 40px 20px 40px;
+    border-radius: 15px;
+    border : 2px solid black;
     width: 320px;
     text-align: center;
 }
 
 /* Title */
 .login-form h2 {
-    color: white;
+    color: black;
     margin-bottom: 20px;
 }
 
@@ -32,10 +42,9 @@ body {
     width: 100%;
     padding: 12px;
     margin: 10px 0;
-    border: none;
+    border : 2px solid black;
     border-radius: 6px;
     font-size: 16px;
-    box-sizing: border-box;
 }
 
 /* Button */
@@ -44,7 +53,7 @@ body {
     color: black;
     font-weight: bold;
     cursor: pointer;
-    transition: 0.3s;
+
 }
 
 .login-form input[type="submit"]:hover {
