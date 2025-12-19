@@ -108,28 +108,28 @@
 
         <!-- Match Avenir -->
         <table class="table">
-        <thead>
+          <thead>
             <tr>
-            <th>Date</th>
-            <th>Heure</th>
-            <th>Adversaire</th>
-            <th>Lieu</th>
-            <th>Statut</th>
+              <th>Date</th>
+              <th>Heure</th>
+              <th>Adversaire</th>
+              <th>Lieu</th>
+              <th>Statut</th>
             </tr>
-        </thead>
-        <tbody>
+          </thead>
+          <tbody>
             <?php foreach($matchsAvenir as $m): ?>
-            <tr>
+              <tr>
                 <td><?= $m['DateDeMatch'] ?></td>
                 <td><?= $m['HeureDeMatch'] ?></td>
                 <td><?= $m['NomEquipeAdversaire'] ?></td>
                 <td><?= $m['LieuDeRencontre'] ?></td>
                 <td>
-                <span class="status avenir"><?= $m['Statut'] ?></span>
+                  <span class="status avenir"><?= $m['Statut'] ?></span>
                 </td>
-            </tr>
+              </tr>
             <?php endforeach; ?>
-        </tbody>
+          </tbody>
         </table>
 
 
@@ -138,32 +138,53 @@
         <div class="panel-header">
           <h2>Résultats Récents</h2>
         </div>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Adversaire</th>
+                    <th>Résultat</th>
+                    <th>Points (Nous / Eux)</th>
+                  </tr>
+                </thead>
+                <tbody>
 
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Adversaire</th>
-              <th>Résultat</th>
-              <th>Points (Nous / Eux)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>08/01/2025</td>
-              <td>Eagles</td>
-              <td><span class="status victoire">Victoire</span></td>
-              <td>79 / 61</td>
-            </tr>
-            <tr>
-              <td>03/01/2025</td>
-              <td>Bulls</td>
-              <td><span class="status defaite">Défaite</span></td>
-              <td>68 / 71</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+              <?php
+              $compteur = 0;   // counter
+              ?>
+
+              <?php foreach ($recentResults as $r): ?>
+
+                <?php
+                // Check if match was played
+                if (
+                    ($r['Resultat'] == 'Victoire' ||
+                    $r['Resultat'] == 'Défaite' ||
+                    $r['Resultat'] == 'Nul')
+                    && $compteur < 5
+                ):
+                    $compteur++;
+                    $statusClass = strtolower($r['Resultat']);
+                ?>
+                  <tr>
+                    <td><?= $r['DateDeMatch'] ?></td>
+                    <td><?= $r['NomEquipeAdversaire'] ?></td>
+                    <td>
+                      <span class="status <?= $statusClass ?>">
+                        <?= $r['Resultat'] ?>
+                      </span>
+                    </td>
+                    <td><?= $r['PointsMarquesParAdversaire'] ?> / ???</td>
+                  </tr>
+
+                <?php endif; ?>
+
+              <?php endforeach; ?>
+
+                </tbody>
+      </table>
+
+        </div>
 
       <!-- TOP PLAYERS -->
       <div class="panel">
@@ -171,32 +192,25 @@
           <h2>Top 5 Joueurs (Points)</h2>
         </div>
 
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Nom</th>
-              <th>Points total</th>
-              <th>Matchs joués</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Martin Dupont</td>
-              <td>189</td>
-              <td>12</td>
-            </tr>
-            <tr>
-              <td>Julien Arnaud</td>
-              <td>172</td>
-              <td>12</td>
-            </tr>
-            <tr>
-              <td>Kilian Morel</td>
-              <td>155</td>
-              <td>11</td>
-            </tr>
-          </tbody>
-        </table>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Nom</th>
+                <th>Points total</th>
+                <th>Matchs joués</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php foreach($topPlayers as $p): ?>
+                <tr>
+                  <td><?= $p['Nom'] . ' ' . $p['Prenom'] ?></td>
+                  <td><?= $p['TotalPoints'] ?></td>
+                  <td>???</td> <!-- replace ??? with number of matches played if available -->
+                </tr>
+              <?php endforeach; ?>
+            </tbody>
+          </table>
+
       </div>
 
     </section>

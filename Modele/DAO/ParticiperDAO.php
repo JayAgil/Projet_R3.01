@@ -5,7 +5,7 @@ class ParticiperDAO {
     public function __construct() {
         try {
             $db = 'r301php2025_db';
-            $server = 'mysql.alwaysdata.com/';
+            $server = 'mysql-r301php2025.alwaysdata.net';
             $login = '442017';
             $mdp = '!@#$1234abcd';
             $this->pdo = new PDO("mysql:host=$server;dbname=$db", $login, $mdp); 
