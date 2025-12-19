@@ -5,10 +5,10 @@ class JoueurDAO {
 
     public function __construct() {
         try {
-            $db = 'r301php2025_db';
-            $server = 'mysql-r301php2025.alwaysdata.net';
-            $login = '442017';
-            $mdp = '!@#$1234abcd';
+             $db = 'r301php2025_db';
+            $server = 'localhost';
+            $login = 'root';
+            $mdp = '';
             $this->linkpdo = new PDO("mysql:host=$server;dbname=$db;charset=utf8", $login, $mdp);
             $this->linkpdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (Exception $e) {

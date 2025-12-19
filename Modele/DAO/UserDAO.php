@@ -4,7 +4,7 @@
 
     public function __construct() {
         try {
-           $db = 'r301php2025_db';
+            $db = 'r301php2025_db';
             $server = 'localhost';
             $login = 'root';
             $mdp = '';
