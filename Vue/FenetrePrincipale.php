@@ -1,4 +1,10 @@
 <?php
+  session_start();
+  if (!isset($_SESSION['user'])) {
+    header("Location: /index.php");
+    exit;
+  }
+
     require_once __DIR__ . '/../Modele/DAO/MatchBasketballDAO.php';
     require_once __DIR__ . '/../Modele/DAO/JoueurDAO.php';
     require_once __DIR__ . '/../Modele/DAO/ParticiperDAO.php';
@@ -114,6 +120,7 @@
               <th>Adversaire</th>
               <th>Lieu</th>
               <th>Statut</th>
+              <th>Feuille de match</th>
             </tr>
           </thead>
           <tbody>
@@ -126,6 +133,13 @@
                 <td>
                   <span class="status avenir"><?= $m['Statut'] ?></span>
                 </td>
+                <td>
+              <form action="../index.php" method="POST">
+                  <input type="hidden" name="DateDeMatch" value="<?= $m['DateDeMatch'] ?>">
+                  <input type="hidden" name="HeureDeMatch" value="<?= $m['HeureDeMatch'] ?>">
+                  <button type="submit">Feuille de match</button>
+              </form>
+          </td>
               </tr>
             <?php endforeach; ?>
           </tbody>

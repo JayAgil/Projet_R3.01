@@ -15,13 +15,19 @@
         }
     }
 
-    public function verifierUserExiste($username, $mdp) {
-    $req = $this->linkpdo->prepare('SELECT count(*) as nb FROM Users WHERE Username = :user AND Password = :mdp');
-    $req->execute(array(':user' => $username, ':mdp' => $mdp));
-    $nb = $req->fetch(PDO::FETCH_ASSOC);
-    
-    return $nb['nb'] > 0;
-    }
+   public function getMdpByUsername($username) {
+    $req = $this->linkpdo->prepare(
+        "SELECT Password FROM Users WHERE Username = :user"
+    );
+    $req->execute([":user" => $username]);
+
+    $result = $req->fetch(PDO::FETCH_ASSOC);
+
+    return $result ? $result['Password'] : null;
+}
+
+
+
 
 
 
