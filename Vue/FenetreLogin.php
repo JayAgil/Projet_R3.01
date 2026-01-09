@@ -33,6 +33,8 @@
 <?php if (!empty($erreur)) : ?>
     <p><?php echo $erreur ?></p>
 <?php endif; ?>
-
+<?php
+    echo password_hash('1234',PASSWORD_DEFAULT);
+?>
 </body>
 </html>
