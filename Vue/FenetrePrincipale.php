@@ -17,7 +17,7 @@
     $matchsCeMois = $matchDAO->getNbMatchCeMois();     
     $victoires = $matchDAO->getNbMatch("Victoire");    
     $defaites = $matchDAO->getNbMatch("Défaite");     
-    $totalJoueurs = count($joueurDAO->getAllJoueurs()); 
+    $totalJoueurs = count($joueurDAO->getAll()); 
 
     $matchsAvenir = $matchDAO->getMatchsAvenir();       
     $recentResults = $matchDAO->getAllMatches();        
@@ -160,41 +160,40 @@
                     <th>Points (Nous / Eux)</th>
                   </tr>
                 </thead>
-                <tbody>
+                  <tbody>
 
-              <?php
-              $compteur = 0;   // counter
-              ?>
+                  <?php
+                  $compteur = 0;
+                  foreach ($recentResults as $r):
 
-              <?php foreach ($recentResults as $r): ?>
+                      // calculate our points (INSIDE PHP)
+                      $pointsNous = $participerDAO->getTotalPointsEquipe(
+                          $r->getDateDeMatch(),
+                          $r->getHeureDeMatch()
+                      );
 
-                <?php
-                // Check if match was played
-                if (
-                    ($r['Resultat'] == 'Victoire' ||
-                    $r['Resultat'] == 'Défaite' ||
-                    $r['Resultat'] == 'Nul')
-                    && $compteur < 5
-                ):
-                    $compteur++;
-                    $statusClass = strtolower($r['Resultat']);
-                ?>
+                      if (
+                          in_array($r->getResultat(), ['Victoire', 'Défaite', 'Nul']) &&
+                          $compteur < 5
+                      ):
+                          $compteur++;
+                          $statusClass = strtolower($r->getResultat());
+                  ?>
                   <tr>
-                    <td><?= $r['DateDeMatch'] ?></td>
-                    <td><?= $r['NomEquipeAdversaire'] ?></td>
-                    <td>
-                      <span class="status <?= $statusClass ?>">
-                        <?= $r['Resultat'] ?>
-                      </span>
-                    </td>
-                    <td><?= $r['PointsMarquesParAdversaire'] ?> / ???</td>
+                      <td><?= $r->getDateDeMatch() ?></td>
+                      <td><?= $r->getNomEquipeAdversaire() ?></td>
+                      <td>
+                          <span class="status <?= $statusClass ?>">
+                              <?= $r->getResultat() ?>
+                          </span>
+                      </td>
+                      <td><?= $pointsNous ?> / <?= $r->getPointsMarquesParAdversaire() ?></td>
                   </tr>
-
-                <?php endif; ?>
-
-              <?php endforeach; ?>
-
-                </tbody>
+                  <?php
+                      endif;
+                  endforeach;
+                  ?>
+                  </tbody>
       </table>
 
         </div>

@@ -90,5 +90,32 @@ class ParticiperDAO {
         $stmt->bindValue(':Commentaire', $p->Commentaire);
         $stmt->bindValue(':Joue', $p->Joue, PDO::PARAM_INT);
     }
+
+    public function getTotalPointsEquipe(string $date, string $heure): int {
+        $sql = "
+            SELECT MatchID
+            FROM match_basketball
+            WHERE DateDeMatch = :date
+            AND HeureDeMatch = :heure
+        ";
+        $stmt = $this->linkpdo->prepare($sql);
+        $stmt->execute([':date' => $date, ':heure' => $heure]);
+        $match = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!$match) return 0;
+        $matchID = $match['MatchID'];
+        $sql = "
+            SELECT SUM(NbPointsMarque) AS total
+            FROM participer
+            WHERE MatchID = :matchID
+            AND Joue = 1
+        ";
+        $stmt = $this->linkpdo->prepare($sql);
+        $stmt->execute([':matchID' => $matchID]);
+        return (int) ($stmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0);
+    }
+
+
+
+
 }
 ?>
