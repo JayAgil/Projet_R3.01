@@ -1,14 +1,21 @@
 <?php
-    require_once __DIR__ . '/../Modele/DAO/MatchBasketballDAO.php';
-    require_once __DIR__ . '/../Modele/DAO/JoueurDAO.php';
-    require_once __DIR__ . '/../Modele/DAO/ParticiperDAO.php';
+require_once __DIR__ . '/../Modele/DAO/MatchBasketballDAO.php';
+require_once __DIR__ . '/../Modele/DAO/JoueurDAO.php';
+require_once __DIR__ . '/../Modele/DAO/ParticiperDAO.php';
 
-    $matchDAO = new MatchBasketballDAO();
-    $joueurDAO = new JoueurDAO();
-    $participerDAO = new ParticiperDAO();
+$matchDAO = new MatchBasketballDAO();
+$joueurDAO = new JoueurDAO();
+$participerDAO = new ParticiperDAO();
 
-    $joueurs = $joueurDAO->getAllJoueurs();
+$searchTerm = isset($_GET['search']) ? trim($_GET['search']) : '';
+
+if ($searchTerm !== '') {
+    $joueurs = $joueurDAO->search($searchTerm);  
+} else {
+    $joueurs = $joueurDAO->getAll();           
+}
 ?>
+
 
 
 <!DOCTYPE html>
