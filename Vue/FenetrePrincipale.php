@@ -187,7 +187,7 @@
                               <?= $r->getResultat() ?>
                           </span>
                       </td>
-                      <td><?= $pointsNous ?> / <?= $r->getPointsMarquesParAdversaire() ?></td>
+                      <td><?= $pointsNous ?> / <?= $r->getPointMarquesParAdversaire() ?></td>
                   </tr>
                   <?php
                       endif;
@@ -203,7 +203,7 @@
         <div class="panel-header">
           <h2>Top 5 Joueurs (Points)</h2>
         </div>
-
+        
           <table class="table">
             <thead>
               <tr>
@@ -217,7 +217,7 @@
                 <tr>
                   <td><?= $p['Nom'] . ' ' . $p['Prenom'] ?></td>
                   <td><?= $p['TotalPoints'] ?></td>
-                  <td>???</td> <!-- replace ??? with number of matches played if available -->
+                  <td><?= $participerDAO->getNbMatchsJoues($p['NumeroLicence']) ?></td>
                 </tr>
               <?php endforeach; ?>
             </tbody>

@@ -114,6 +114,19 @@ class ParticiperDAO {
         return (int) ($stmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0);
     }
 
+    public function getNbMatchsJoues(string $numeroLicence): int {
+        $sql = "
+            SELECT COUNT(*) AS nbMatchs
+            FROM participer
+            WHERE NumeroLicence = :num
+                AND Joue = 1
+        ";
+        $stmt = $this->linkpdo->prepare($sql);
+        $stmt->execute([':num' => $numeroLicence]);
+        return (int) ($stmt->fetch(PDO::FETCH_ASSOC)['nbMatchs'] ?? 0);
+    }
+
+
 
 
 
