@@ -1,26 +1,24 @@
 <?php
+require_once __DIR__ . '/../Modele/DAO/ParticiperDAO.php'; 
 require_once __DIR__ . '/../Modele/DAO/JoueurDAO.php';
-require_once __DIR__ . '/../Modele/DAO/ParticiperDAO.php';
-
 class GestionFeuilleMatch {
     private $joueurDAO;
     private $participerDAO;
-    private $matchDate;
-    private $matchTime;
+    private $matchId;
 
-    public function __construct($matchDate, $matchTime) {
+    public function __construct($matchId) {
         $this->joueurDAO = new JoueurDAO();
         $this->participerDAO = new ParticiperDAO();
-        $this->matchDate = $matchDate;
-        $this->matchTime = $matchTime;
+        $this->matchId = $matchId; // The ID passed from the main menu
     }
 
     public function executer() {
         $error = "";
         $success = "";
 
-        // 1. Handle Form Submission (Save to DB)
+        // --- 1. HANDLE SAVING (POST) ---
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Get Titulars from the 5 specific selects
             $titulars = [
                 'PG' => $_POST['titular_PG'] ?? '',
                 'SG' => $_POST['titular_SG'] ?? '',
@@ -29,17 +27,17 @@ class GestionFeuilleMatch {
                 'C'  => $_POST['titular_C'] ?? ''
             ];
 
-            $filledTitulars = array_filter($titulars); 
-            if (count($filledTitulars) < 5) {
-                $error = "Erreur : Vous devez sélectionner les 5 titulaires.";
-            } elseif (count(array_unique($filledTitulars)) !== 5) {
-                $error = "Erreur : Un joueur ne peut pas être sélectionné deux fois.";
+            // Validation: Exactly 5 unique players
+            $filled = array_filter($titulars);
+            if (count($filled) < 5 || count(array_unique($filled)) !== 5) {
+                $error = "Veuillez sélectionner 5 titulaires différents.";
             } else {
-                $substitutes = [];
+                // Collect Substitutes from the arrays
+                $subs = [];
                 if (isset($_POST['substitute_player'])) {
                     foreach ($_POST['substitute_player'] as $index => $licence) {
                         if (!empty($licence)) {
-                            $substitutes[] = [
+                            $subs[] = [
                                 'licence' => $licence,
                                 'pos' => $_POST['substitute_pos'][$index] ?? 'Remplaçant'
                             ];
@@ -47,36 +45,27 @@ class GestionFeuilleMatch {
                     }
                 }
 
-                if ($this->participerDAO->saveMatchSheet($this->matchDate, $this->matchTime, $titulars, $substitutes)) {
-                    $success = "La feuille de match a été enregistrée avec succès !";
-                } else {
-                    $error = "Une erreur est survenue lors de l'enregistrement.";
+                // Call DAO to save using the MatchID
+                if ($this->participerDAO->saveMatchSheet($this->matchId, $titulars, $subs)) {
+                    $success = "Feuille de match enregistrée !";
                 }
             }
         }
 
-        // 2. Fetch data needed for the form
+        // --- 2. PREPARE VIEW DATA ---
         $players = $this->joueurDAO->getActivePlayers();
-        $existingEntries = $this->participerDAO->getExistingPlayers($this->matchDate, $this->matchTime);
+        $existing = $this->participerDAO->getExistingPlayers($this->matchId);
         
-        // 3. Organize existing data for the View to pre-fill dropdowns
-        $currentSelection = [
-            'titulars' => [],
-            'subs' => []
-        ];
-
-        foreach ($existingEntries as $entry) {
+        // Organize for the View
+        $currentSelection = ['titulars' => [], 'subs' => []];
+        foreach ($existing as $entry) {
             if ($entry['EstTitulaire']) {
                 $currentSelection['titulars'][$entry['PosteOccupee']] = $entry['NumeroLicence'];
             } else {
-                $currentSelection['subs'][] = [
-                    'licence' => $entry['NumeroLicence'],
-                    'pos' => $entry['PosteOccupee']
-                ];
+                $currentSelection['subs'][] = $entry;
             }
         }
 
-        // 4. Finally, LOAD THE VIEW (Only once, at the very end)
         require_once __DIR__ . '/../Vue/feuilleDeMatch.php';
     }
 }
