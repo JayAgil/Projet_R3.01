@@ -1,3 +1,4 @@
+/* --- Joueur table --- */
 .joueur {
   width: 100%;
 }
@@ -73,25 +74,7 @@
   padding: 20px;
 }
 
-@media (max-width: 880px) {
-  .main-content {
-    margin-left: 0;
-  }
-
-  .rechercher {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .rechercher input {
-    width: 100%;
-  }
-
-  .joueur table {
-    font-size: 13px;
-  }
-
-  /* Container similar to .joueur */
+/* --- Forms for Ajouter / Modifier --- */
 .form-joueur {
   width: 100%;
   max-width: 600px;
@@ -103,7 +86,6 @@
   font-family: sans-serif;
 }
 
-/* Page title */
 .form-joueur h1 {
   margin: 0 0 20px 0;
   font-size: 22px;
@@ -111,14 +93,12 @@
   color: var(--text);
 }
 
-/* Form fields */
 .form-joueur form {
   display: flex;
   flex-direction: column;
   gap: 14px;
 }
 
-/* Labels */
 .form-joueur label {
   font-size: 14px;
   font-weight: 500;
@@ -126,7 +106,6 @@
   color: var(--muted);
 }
 
-/* Inputs and textarea */
 .form-joueur input,
 .form-joueur textarea {
   padding: 10px 12px;
@@ -138,13 +117,11 @@
   box-sizing: border-box;
 }
 
-/* Textarea specific */
 .form-joueur textarea {
   min-height: 80px;
   resize: vertical;
 }
 
-/* Buttons */
 .form-joueur button {
   padding: 10px 16px;
   border-radius: 8px;
@@ -159,24 +136,48 @@
   background: #f1f5f9;
 }
 
-/* Cancel link */
+/* Buttons container */
+.form-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+/* Cancel link styling */
+.form-buttons a,
 .form-joueur a {
   display: inline-block;
-  margin-left: 10px;
+  text-decoration: none;
   padding: 10px 16px;
   border-radius: 8px;
-  text-decoration: none;
-  color: var(--text);
   border: 1px solid rgba(11,18,32,0.15);
   background: #fff;
+  color: var(--text);
+  cursor: pointer;
   transition: background 0.2s;
 }
 
+.form-buttons a:hover,
 .form-joueur a:hover {
   background: #f1f5f9;
 }
 
-/* Responsive */
+/* --- Responsive --- */
+@media (max-width: 880px) {
+  .rechercher {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .rechercher input {
+    width: 100%;
+  }
+
+  .joueur table {
+    font-size: 13px;
+  }
+}
+
 @media (max-width: 600px) {
   .form-joueur {
     padding: 16px;
@@ -184,11 +185,9 @@
   }
 
   .form-joueur button,
-  .form-joueur a {
+  .form-buttons a {
     width: 100%;
     text-align: center;
     margin-left: 0;
   }
-}
-
 }

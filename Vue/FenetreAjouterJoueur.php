@@ -2,44 +2,49 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Ajouter un joueur</title>
+    <title>Modifier un joueur</title>
     <link rel="stylesheet" href="../css/joueur.css">
 </head>
-<body>
+
 <div class="form-joueur">
-<h1>Ajouter un joueur</h1>
+  <h1>Ajouter un joueur</h1>
 
-<form method="POST" action="../Controleur/GestionFenetreJoueur.php?action=store">
+  <form method="GET" action="../Controlleur/GestionFenetreJoueur.php">
 
-    <label>Numéro Licence</label><br>
-    <input type="text" name="NumeroLicence" required><br><br>
+      <!-- Pass action as hidden GET parameter -->
+      <input type="hidden" name="action" value="store">
 
-    <label>Nom</label><br>
-    <input type="text" name="Nom" required><br><br>
+      <label>Numéro Licence</label>
+      <input type="text" name="NumeroLicence" required>
 
-    <label>Prénom</label><br>
-    <input type="text" name="Prenom" required><br><br>
+      <label>Nom</label>
+      <input type="text" name="Nom" required>
 
-    <label>Date de naissance</label><br>
-    <input type="date" name="DateDeNaissance"><br><br>
+      <label>Prénom</label>
+      <input type="text" name="Prenom" required>
 
-    <label>Taille (cm)</label><br>
-    <input type="number" name="Taille_cm"><br><br>
+      <label>Date de naissance</label>
+      <input type="date" name="DateDeNaissance">
 
-    <label>Poids (kg)</label><br>
-    <input type="number" name="Poids_kg"><br><br>
+      <label>Taille (cm)</label>
+      <input type="number" name="Taille_cm">
 
-    <label>Statut</label><br>
-    <input type="text" name="Statut"><br><br>
+      <label>Poids (kg)</label>
+      <input type="number" name="Poids_kg">
 
-    <label>Commentaire</label><br>
-    <textarea name="Commentaire"></textarea><br><br>
+      <label>Statut</label>
+      <input type="text" name="Statut">
 
-    <button type="submit">Ajouter</button>
-    <a href="FenetreJoueur.php">Annuler</a>
+      <label>Commentaire</label>
+      <textarea name="Commentaire"></textarea>
 
-</form>
+      <div class="form-buttons">
+          <!-- Submit via GET -->
+          <button type="submit">Ajouter</button>
+
+          <!-- Cancel button (still a GET link) -->
+          <a href="FenetreJoueur.php">Annuler</a>
+      </div>
+  </form>
 </div>
-
-</body>
 </html>

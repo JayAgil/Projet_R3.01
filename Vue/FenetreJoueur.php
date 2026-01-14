@@ -25,10 +25,9 @@ if ($searchTerm !== '') {
     <link rel="stylesheet" href="../css/principale.css">
     <link rel="stylesheet" href="../css/joueur.css">
 </head>
-
 <body>
-<div class="app">
 
+<div class="app">
     <aside class="sidebar" id="sidebar">
         <div class="brand">
             <span class="brand-text">Gestion Matchs</span>
@@ -40,17 +39,18 @@ if ($searchTerm !== '') {
         </nav>
     </aside>
 
-    <div class="main">
-        <div class="content">
-
+    <main class="main">
+        <section class="content">
             <div class="joueur">
                 <h1>Joueurs</h1>
 
                 <!-- ADD BUTTON -->
-                <a href="../Controlleur/GestionFenetreJoueur.php?action=add">
-                    ➕ Ajouter un joueur
-                </a>
+                <form method="GET" action="../Controlleur/GestionFenetreJoueur.php" style="margin-bottom:16px;">
+                    <input type="hidden" name="action" value="add">
+                    <button type="submit" style="padding:8px 14px; border-radius:8px; border:1px solid rgba(11,18,32,0.15); background:#fff; cursor:pointer;">➕ Ajouter un joueur</button>
+                </form>
 
+                <!-- SEARCH FORM -->
                 <form method="GET" class="rechercher">
                     <input
                         type="text"
@@ -72,45 +72,59 @@ if ($searchTerm !== '') {
                             <th>Poids (kg)</th>
                             <th>Statut</th>
                             <th>Commentaire</th>
-                            <th>Actions</th> <!-- ADDED -->
+                            <th>Actions</th>
                         </tr>
                     </thead>
 
                     <tbody>
-                        <?php if (!empty($joueurs)): ?>
-                            <?php foreach ($joueurs as $j): ?>
-                                <tr>
-                                    <td><?= htmlspecialchars($j['NumeroLicence']) ?></td>
-                                    <td><?= htmlspecialchars($j['Nom']) ?></td>
-                                    <td><?= htmlspecialchars($j['Prenom']) ?></td>
-                                    <td><?= htmlspecialchars($j['DateDeNaissance']) ?></td>
-                                    <td><?= htmlspecialchars($j['Taille_cm']) ?></td>
-                                    <td><?= htmlspecialchars($j['Poids_kg']) ?></td>
-                                    <td><?= htmlspecialchars($j['Statut']) ?></td>
-                                    <td><?= htmlspecialchars($j['Commentaire']) ?></td>
-
-                                    <!-- ACTIONS -->
-                                    <td>
-                                        <a href="../Controlleur/GestionFenetreJoueur.php?action=edit&id=<?= $j['NumeroLicence'] ?>">✏️</a>
-                                        <a href="../Controlleur/GestionFenetreJoueur.php?action=delete&id=<?= $j['NumeroLicence'] ?>"
-                                           onclick="return confirm('Supprimer ce joueur ?');">
-                                           🗑️
-                                        </a>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php else: ?>
+                        <?php foreach ($joueurs as $j): ?>
                             <tr>
-                                <td colspan="9">Aucun joueur trouvé.</td>
+                                <td><?= htmlspecialchars($j['NumeroLicence']) ?></td>
+                                <td><?= htmlspecialchars($j['Nom']) ?></td>
+                                <td><?= htmlspecialchars($j['Prenom']) ?></td>
+                                <td><?= htmlspecialchars($j['DateDeNaissance']) ?></td>
+                                <td><?= htmlspecialchars($j['Taille_cm']) ?></td>
+                                <td><?= htmlspecialchars($j['Poids_kg']) ?></td>
+                                <td><?= htmlspecialchars($j['Statut']) ?></td>
+                                <td><?= htmlspecialchars($j['Commentaire']) ?></td>
+
+                                <!-- ACTIONS -->
+                                <td>
+                                    <div class="actions-group" style="display:flex; gap:6px;">
+
+                                        <!-- EDIT BUTTON -->
+                                        <form method="GET" action="../Controlleur/GestionFenetreJoueur.php">
+                                            <input type="hidden" name="action" value="edit">
+                                            <input type="hidden" name="id" value="<?= $j['NumeroLicence'] ?>">
+                                            <button type="submit" style="padding:4px 8px; border-radius:6px; border:1px solid rgba(11,18,32,0.15); background:#fff; cursor:pointer;">✏️</button>
+                                        </form>
+
+                                        <!-- DELETE BUTTON -->
+                                        <form method="GET" action="../Controlleur/GestionFenetreJoueur.php" onsubmit="return confirm('Supprimer ce joueur ?');">
+                                            <input type="hidden" name="action" value="delete">
+                                            <input type="hidden" name="id" value="<?= $j['NumeroLicence'] ?>">
+                                            <button type="submit" style="padding:4px 8px; border-radius:6px; border:1px solid rgba(11,18,32,0.15); background:#fff; cursor:pointer;">🗑️</button>
+                                        </form>
+
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+
+                        <?php if (empty($joueurs)): ?>
+                            <tr>
+                                <td colspan="9" style="text-align:center; padding:20px; color:var(--muted);">
+                                    Aucun joueur trouvé.
+                                </td>
                             </tr>
                         <?php endif; ?>
                     </tbody>
                 </table>
+
             </div>
-
-        </div>
-    </div>
-
+        </section>
+    </main>
 </div>
+
 </body>
 </html>
