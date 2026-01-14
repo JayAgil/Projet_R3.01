@@ -116,5 +116,14 @@ class JoueurDAO {
         return (int)$stmt->fetch(PDO::FETCH_ASSOC)['Nombre'] ?? 0;
     }
 
+    public function getById($numeroLicence) {
+        $sql = "SELECT * FROM Joueur WHERE NumeroLicence = ?";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$numeroLicence]);
+        $joueur = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $joueur;
+    }
+
+
 }
 ?>
