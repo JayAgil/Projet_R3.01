@@ -24,7 +24,6 @@ body {
 
 .app { display: flex; min-height: 100vh; }
 
-/* Sidebar */
 .sidebar {
   width: 260px;
   background: linear-gradient(180deg, var(--sidebar), var(--sidebar-2));
@@ -52,7 +51,6 @@ body {
 }
 .nav-item.active { background: rgba(255, 255, 255, 0.1); color: #fff; }
 
-/* Main Content */
 .main { flex: 1; display: flex; flex-direction: column; }
 .topbar {
   display: flex;
@@ -64,7 +62,6 @@ body {
 
 .content { padding: 24px; }
 
-/* Grid Cards */
 .cards {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -83,7 +80,6 @@ body {
 .card-title { color: var(--muted); font-size: 13px; margin-bottom: 5px; }
 .card-value { font-size: 24px; font-weight: 700; }
 
-/* Panels & Tables */
 .panel {
   background: var(--card);
   border-radius: var(--radius);
@@ -98,7 +94,6 @@ body {
 .table th { text-align: left; padding: 12px; color: var(--muted); border-bottom: 1px solid #f0f0f0; font-size: 13px; }
 .table td { padding: 14px 12px; border-bottom: 1px solid #f9f9f9; vertical-align: middle; }
 
-/* Status Badges */
 .status {
   padding: 4px 10px;
   border-radius: 20px;
@@ -110,16 +105,14 @@ body {
 .status.defaite { background: #fee2e2; color: #b91c1c; }
 .status.avenir { background: #eff6ff; color: #1d4ed8; }
 
-/* SIDE-BY-SIDE BUTTONS (The Fix) */
 .actions-group {
   display: flex;
-  flex-direction: row; /* Horizontal */
-  gap: 8px;            /* Space between */
+  flex-direction: row;
+  gap: 12px;          
   align-items: center;
-  flex-wrap: nowrap;   /* No stacking */
+  flex-wrap: nowrap;
 }
 
-/* Ensure forms inside the group don't act as blocks */
 .actions-group form {
   margin: 0;
   display: inline-block;
@@ -127,28 +120,48 @@ body {
 
 .btn-action {
   background: var(--card);
-  border: 1px solid rgba(11, 18, 32, 0.1);
   color: var(--text);
-  padding: 8px 12px;
-  border-radius: 8px;
+  border: 1.5px solid rgba(79, 70, 229, 0.15); 
+  padding: 8px 18px;
+  border-radius: 50px;       
   font-size: 12px;
   font-weight: 600;
+  letter-spacing: 0.3px;
+  
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  transition: all 0.2s ease;
-  white-space: nowrap; /* Prevent text wrap */
+  gap: 8px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+  white-space: nowrap;
+  
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
 }
 
 .btn-action:hover {
-  background: var(--bg);
+  background: #ffffff;
   border-color: var(--accent);
   color: var(--accent);
-  transform: translateY(-2px);
+  
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(79, 70, 229, 0.15);
 }
 
-/* Vertical Stacking for Stats Panels */
+.btn-action:active {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(79, 70, 229, 0.1);
+}
+
+
+.btn-action span {
+  font-size: 14px;
+  transition: transform 0.2s ease;
+}
+
+.btn-action:hover span {
+  transform: scale(1.2); 
+}
+
 .stats-stack {
   display: flex;
   flex-direction: column; 
