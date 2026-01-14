@@ -96,7 +96,7 @@ body {
 
 .table { width: 100%; border-collapse: collapse; }
 .table th { text-align: left; padding: 12px; color: var(--muted); border-bottom: 1px solid #f0f0f0; font-size: 13px; }
-.table td { padding: 14px 12px; border-bottom: 1px solid #f9f9f9; }
+.table td { padding: 14px 12px; border-bottom: 1px solid #f9f9f9; vertical-align: middle; }
 
 /* Status Badges */
 .status {
@@ -110,51 +110,19 @@ body {
 .status.defaite { background: #fee2e2; color: #b91c1c; }
 .status.avenir { background: #eff6ff; color: #1d4ed8; }
 
-/* SIDE-BY-SIDE BUTTONS STYLE */
+/* SIDE-BY-SIDE BUTTONS (The Fix) */
 .actions-group {
   display: flex;
-  flex-direction: row;
-  gap: 8px;
+  flex-direction: row; /* Horizontal */
+  gap: 8px;            /* Space between */
   align-items: center;
+  flex-wrap: nowrap;   /* No stacking */
 }
 
-.actions-group form { margin: 0; }
-
-.btn-action {
-  background: var(--card); /* Matches the panel/card color */
-  border: 1px solid rgba(11, 18, 32, 0.1);
-  color: var(--text);
-  padding: 8px 12px;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  transition: all 0.2s ease;
-}
-
-.btn-action:hover {
-  background: var(--bg);
-  border-color: var(--accent);
-  color: var(--accent);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-/* ... (keep your existing CSS variables and base styles) ... */
-
-.actions-group {
-  display: flex;
-  flex-direction: row;
-  gap: 8px;
-  align-items: center;
-  flex-wrap: nowrap; 
-}
-
+/* Ensure forms inside the group don't act as blocks */
 .actions-group form {
   margin: 0;
+  display: inline-block;
 }
 
 .btn-action {
@@ -170,7 +138,7 @@ body {
   align-items: center;
   gap: 6px;
   transition: all 0.2s ease;
-  white-space: nowrap;
+  white-space: nowrap; /* Prevent text wrap */
 }
 
 .btn-action:hover {
@@ -180,6 +148,7 @@ body {
   transform: translateY(-2px);
 }
 
+/* Vertical Stacking for Stats Panels */
 .stats-stack {
   display: flex;
   flex-direction: column; 
@@ -188,4 +157,6 @@ body {
 
 .btn-toggle { background: none; border: none; color: white; cursor: pointer; font-size: 20px; }
 
-@media (max-width: 1024px) { .cards { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 1024px) { 
+  .cards { grid-template-columns: repeat(2, 1fr); } 
+}
