@@ -90,4 +90,105 @@
   .joueur table {
     font-size: 13px;
   }
+
+  /* Container similar to .joueur */
+.form-joueur {
+  width: 100%;
+  max-width: 600px;
+  background: #fff;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  margin: 24px auto;
+  font-family: sans-serif;
+}
+
+/* Page title */
+.form-joueur h1 {
+  margin: 0 0 20px 0;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* Form fields */
+.form-joueur form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Labels */
+.form-joueur label {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 4px;
+  color: var(--muted);
+}
+
+/* Inputs and textarea */
+.form-joueur input,
+.form-joueur textarea {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(11,18,32,0.15);
+  outline: none;
+  font-size: 14px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Textarea specific */
+.form-joueur textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+/* Buttons */
+.form-joueur button {
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(11,18,32,0.15);
+  background: #fff;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.form-joueur button:hover {
+  background: #f1f5f9;
+}
+
+/* Cancel link */
+.form-joueur a {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--text);
+  border: 1px solid rgba(11,18,32,0.15);
+  background: #fff;
+  transition: background 0.2s;
+}
+
+.form-joueur a:hover {
+  background: #f1f5f9;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .form-joueur {
+    padding: 16px;
+    margin: 16px;
+  }
+
+  .form-joueur button,
+  .form-joueur a {
+    width: 100%;
+    text-align: center;
+    margin-left: 0;
+  }
+}
+
 }

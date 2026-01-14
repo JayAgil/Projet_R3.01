@@ -31,31 +31,13 @@ if ($searchTerm !== '') {
 
     <aside class="sidebar" id="sidebar">
         <div class="brand">
-            <svg class="logo" viewBox="0 0 24 24">
-                <path d="M3 3h8v8H3zM13 3h8v8h-8zM3 13h8v8H3zM13 13h8v8h-8z"/>
-            </svg>
             <span class="brand-text">Gestion Matchs</span>
-            <button class="btn-toggle" id="btnToggle">☰</button>
         </div>
 
         <nav class="nav">
-            <a class="nav-item active" href="FenetrePrincipale.php">
-                <span class="nav-ico">🏠</span> Dashboard
-            </a>
-            <a class="nav-item" href="FenetreJoueur.php">
-                <span class="nav-ico">👥</span> Joueurs
-            </a>
+            <a class="nav-item active" href="FenetrePrincipale.php">🏠 Dashboard</a>
+            <a class="nav-item" href="FenetreJoueur.php">👥 Joueurs</a>
         </nav>
-
-        <div class="sidebar-footer">
-            <div class="user">
-                <div class="avatar">GM</div>
-                <div class="user-info">
-                    <div class="name">Admin</div>
-                    <div class="role">Gestionnaire</div>
-                </div>
-            </div>
-        </div>
     </aside>
 
     <div class="main">
@@ -63,6 +45,11 @@ if ($searchTerm !== '') {
 
             <div class="joueur">
                 <h1>Joueurs</h1>
+
+                <!-- ADD BUTTON -->
+                <a href="../Controlleur/GestionFenetreJoueur.php?action=add">
+                    ➕ Ajouter un joueur
+                </a>
 
                 <form method="GET" class="rechercher">
                     <input
@@ -85,6 +72,7 @@ if ($searchTerm !== '') {
                             <th>Poids (kg)</th>
                             <th>Statut</th>
                             <th>Commentaire</th>
+                            <th>Actions</th> <!-- ADDED -->
                         </tr>
                     </thead>
 
@@ -100,11 +88,20 @@ if ($searchTerm !== '') {
                                     <td><?= htmlspecialchars($j['Poids_kg']) ?></td>
                                     <td><?= htmlspecialchars($j['Statut']) ?></td>
                                     <td><?= htmlspecialchars($j['Commentaire']) ?></td>
+
+                                    <!-- ACTIONS -->
+                                    <td>
+                                        <a href="../Controlleur/GestionFenetreJoueur.php?action=edit&id=<?= $j['NumeroLicence'] ?>">✏️</a>
+                                        <a href="../Controlleur/GestionFenetreJoueur.php?action=delete&id=<?= $j['NumeroLicence'] ?>"
+                                           onclick="return confirm('Supprimer ce joueur ?');">
+                                           🗑️
+                                        </a>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="8">Aucun joueur trouvé.</td>
+                                <td colspan="9">Aucun joueur trouvé.</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>
