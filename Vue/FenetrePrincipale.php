@@ -24,7 +24,6 @@
     $topPlayers = $matchDAO->getTopScorers();  
 ?>
 
-
 <!doctype html>
 <html lang="fr">
 <head>
@@ -32,12 +31,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Gestionnaire des Matchs – Dashboard</title>
   <link rel="stylesheet" href="../css/principale.css" />
+  <style>
+    /* Styles pour aligner les boutons d'action */
+    .actions-cell {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .btn-resultat {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .btn-resultat:hover {
+      background-color: #218838;
+    }
+    form { margin: 0; }
+  </style>
 </head>
 <body>
 
 <div class="app">
 
-  <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
     <div class="brand">
       <svg class="logo" viewBox="0 0 24 24"><path d="M3 3h8v8H3zM13 3h8v8h-8zM3 13h8v8H3zM13 13h8v8h-8z"/></svg>
@@ -48,8 +66,7 @@
     <nav class="nav">
       <a class="nav-item active" href="FenetrePrincipale.php"><span class="nav-ico">🏠</span> Dashboard</a>
       <a class="nav-item" href="FenetreJoueur.php"><span class="nav-ico">👥</span> Joueurs</a>
-  </nav>
-
+    </nav>
 
     <div class="sidebar-footer">
       <div class="user">
@@ -62,10 +79,8 @@
     </div>
   </aside>
 
-  <!-- MAIN AREA -->
   <main class="main">
 
-    <!-- TOPBAR -->
     <header class="topbar">
       <h2 class="page-header">Dashboard</h2>
       <div class="top-actions">
@@ -78,40 +93,32 @@
       </div>
     </header>
 
-    <!-- CONTENT -->
     <section class="content">
 
         <div class="cards">
-
             <div class="card">
                 <div class="card-title">Total Joueurs</div>
                 <div class="card-value"><?= $totalJoueurs ?></div>
             </div>
-
             <div class="card">
                 <div class="card-title">Total Matchs</div>
                 <div class="card-value"><?= $totalMatchs ?></div>
             </div>
-
             <div class="card">
                 <div class="card-title">Matchs Prévu</div>
                 <div class="card-value"><?= count($matchsAvenir) ?></div>
             </div>
-
             <div class="card">
                 <div class="card-title">Matchs Terminés</div>
                 <div class="card-value"><?= $victoires + $defaites ?></div>
             </div>
         </div>
 
-
-      <!-- UPCOMING MATCHES -->
       <div class="panel">
         <div class="panel-header">
           <h2>Prochains Matchs</h2>
         </div>
 
-        <!-- Match Avenir -->
         <table class="table">
           <thead>
             <tr>
@@ -120,7 +127,7 @@
               <th>Adversaire</th>
               <th>Lieu</th>
               <th>Statut</th>
-              <th>Feuille de match</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -134,99 +141,86 @@
                   <span class="status avenir"><?= $m['Statut'] ?></span>
                 </td>
                 <td>
-              <form action="../index.php" method="POST">
-                  <input type="hidden" name="DateDeMatch" value="<?= $m['DateDeMatch'] ?>">
-                  <input type="hidden" name="HeureDeMatch" value="<?= $m['HeureDeMatch'] ?>">
-                  <button type="submit">Feuille de match</button>
-              </form>
-          </td>
+                  <div class="actions-cell">
+                    <form action="AjouterResultat.php" method="GET">
+                        <input type="hidden" name="date" value="<?= $m['DateDeMatch'] ?>">
+                        <input type="hidden" name="heure" value="<?= $m['HeureDeMatch'] ?>">
+                        <button type="submit" class="btn-resultat">Ajouter résultat</button>
+                    </form>
+
+                    <form action="../index.php" method="POST">
+                        <input type="hidden" name="DateDeMatch" value="<?= $m['DateDeMatch'] ?>">
+                        <input type="hidden" name="HeureDeMatch" value="<?= $m['HeureDeMatch'] ?>">
+                        <button type="submit">Feuille de match</button>
+                    </form>
+                  </div>
+                </td>
               </tr>
             <?php endforeach; ?>
           </tbody>
         </table>
+      </div>
 
-
-      <!-- Resultat -->
       <div class="panel">
         <div class="panel-header">
           <h2>Résultats Récents</h2>
         </div>
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Adversaire</th>
-                    <th>Résultat</th>
-                    <th>Points (Nous / Eux)</th>
-                  </tr>
-                </thead>
-                  <tbody>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Adversaire</th>
+              <th>Résultat</th>
+              <th>Points (Nous / Eux)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php
+            $compteur = 0;
+            foreach ($recentResults as $r):
+                $pointsNous = $participerDAO->getTotalPointsEquipe($r->getDateDeMatch(), $r->getHeureDeMatch());
+                if (in_array($r->getResultat(), ['Victoire', 'Défaite', 'Nul']) && $compteur < 5):
+                    $compteur++;
+                    $statusClass = strtolower($r->getResultat());
+            ?>
+            <tr>
+                <td><?= $r->getDateDeMatch() ?></td>
+                <td><?= $r->getNomEquipeAdversaire() ?></td>
+                <td>
+                    <span class="status <?= $statusClass ?>"><?= $r->getResultat() ?></span>
+                </td>
+                <td><?= $pointsNous ?> / <?= $r->getPointMarquesParAdversaire() ?></td>
+            </tr>
+            <?php endif; endforeach; ?>
+          </tbody>
+        </table>
+      </div>
 
-                  <?php
-                  $compteur = 0;
-                  foreach ($recentResults as $r):
-
-                      // calculate our points (INSIDE PHP)
-                      $pointsNous = $participerDAO->getTotalPointsEquipe(
-                          $r->getDateDeMatch(),
-                          $r->getHeureDeMatch()
-                      );
-
-                      if (
-                          in_array($r->getResultat(), ['Victoire', 'Défaite', 'Nul']) &&
-                          $compteur < 5
-                      ):
-                          $compteur++;
-                          $statusClass = strtolower($r->getResultat());
-                  ?>
-                  <tr>
-                      <td><?= $r->getDateDeMatch() ?></td>
-                      <td><?= $r->getNomEquipeAdversaire() ?></td>
-                      <td>
-                          <span class="status <?= $statusClass ?>">
-                              <?= $r->getResultat() ?>
-                          </span>
-                      </td>
-                      <td><?= $pointsNous ?> / <?= $r->getPointMarquesParAdversaire() ?></td>
-                  </tr>
-                  <?php
-                      endif;
-                  endforeach;
-                  ?>
-                  </tbody>
-      </table>
-
-        </div>
-
-      <!-- TOP PLAYERS -->
       <div class="panel">
         <div class="panel-header">
           <h2>Top 5 Joueurs (Points)</h2>
         </div>
-        
-          <table class="table">
-            <thead>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Nom</th>
+              <th>Points total</th>
+              <th>Matchs joués</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach($topPlayers as $p): ?>
               <tr>
-                <th>Nom</th>
-                <th>Points total</th>
-                <th>Matchs joués</th>
+                <td><?= $p['Nom'] . ' ' . $p['Prenom'] ?></td>
+                <td><?= $p['TotalPoints'] ?></td>
+                <td><?= $participerDAO->getNbMatchsJoues($p['NumeroLicence']) ?></td>
               </tr>
-            </thead>
-            <tbody>
-              <?php foreach($topPlayers as $p): ?>
-                <tr>
-                  <td><?= $p['Nom'] . ' ' . $p['Prenom'] ?></td>
-                  <td><?= $p['TotalPoints'] ?></td>
-                  <td><?= $participerDAO->getNbMatchsJoues($p['NumeroLicence']) ?></td>
-                </tr>
-              <?php endforeach; ?>
-            </tbody>
-          </table>
-
+            <?php endforeach; ?>
+          </tbody>
+        </table>
       </div>
 
     </section>
-
   </main>
 </div>
 
