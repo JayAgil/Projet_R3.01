@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Feuille de Match</title>
-    <link rel="stylesheet" href="../css/feuilleDeMatch.css">
+    <link rel="stylesheet" href="css/feuilleDeMatch.css">
 </head>
 <body>
 
@@ -47,7 +47,7 @@
             ?>
                 <div class="position-group">
                     <label><strong><?= $posName ?></strong></label>
-                    <select name="titular[]">
+                    <select name="titulaire[]">
                         <option value="">Choisir Joueur</option>
                         <?php foreach($players as $p): ?>
                             <option value="<?= $p['NumeroLicence'] ?>"><?= $p['Nom'].' '.$p['Prenom'] ?></option>
@@ -66,7 +66,7 @@
                     <p>Remplaçant n°<?= $i ?></p>
                     
                     <select name="sub_target_pos[]">
-                        <option value="">Pour quelle position ?</option>
+                        <option value="">Position ?</option>
                         <?php foreach($positions as $posName): ?>
                             <option value="<?= $posName ?>"><?= $posName ?></option>
                         <?php endforeach; ?>
