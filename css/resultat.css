@@ -1,0 +1,34 @@
+.result-box {
+  display:flex;
+  gap:20px;
+  margin-bottom:20px;
+}
+
+.result-box label {
+  font-size:13px;
+  font-weight:600;
+  color:#64748b;
+}
+
+.result-box input,
+.result-box select {
+  padding:8px;
+  border-radius:8px;
+  border:1px solid #e5e7eb;
+}
+
+.muted {
+  color:#64748b;
+  margin-bottom:20px;
+}
+
+.btn-primary {
+  margin-top:25px;
+  padding:12px 28px;
+  background:#4f46e5;
+  color:white;
+  border:none;
+  border-radius:999px;
+  font-weight:600;
+  cursor:pointer;
+}
