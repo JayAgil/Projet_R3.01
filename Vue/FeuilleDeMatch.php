@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Feuille de Match</title>
-<link rel="stylesheet" href="css/feuilleDeMatch.css">
+    <meta charset="UTF-8">
+    <title>Feuille de Match</title>
+    <link rel="stylesheet" href="css/feuilleDeMatch.css">
 </head>
 <body>
 
 <div class="container">
-    <!-- Left panel: active players -->
+    <!-- Liste des joueurs actifs -->
     <div class="left-panel">
         <h2>Joueurs actifs</h2>
         <table>
@@ -37,35 +37,54 @@
 
     <!-- Right panel: court + selections -->
     <div class="right-panel">
-        <h2>Feuille de match</h2>
-        <form method="POST">
-            <!-- Court with 5 titular spots -->
-            <div class="court">
-                <?php for($i=1; $i<=5; $i++): ?>
-                    <select name="titular[]">
-                        <option value="">Position <?= $i ?></option>
+    <h2>Feuille de match</h2>
+    <form method="POST">
+        
+        <div class="court">
+            <?php 
+            $positions = ['Meneur (PG)', 'Arrière (SG)', 'Ailier (SF)', 'Ailier Fort (PF)', 'Pivot (C)'];
+            foreach($positions as $index => $posName): 
+            ?>
+                <div class="position-group">
+                    <label><strong><?= $posName ?></strong></label>
+                    <select name="titulaire[]">
+                        <option value="">Choisir Joueur</option>
                         <?php foreach($players as $p): ?>
-                        <option value="<?= $p['NumeroLicence'] ?>"><?= $p['Nom'].' '.$p['Prenom'] ?></option>
+                            <option value="<?= $p['NumeroLicence'] ?>"><?= $p['Nom'].' '.$p['Prenom'] ?></option>
                         <?php endforeach; ?>
                     </select>
-                <?php endfor; ?>
-            </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
 
-            <!-- Substitutes -->
-            <h3>Remplaçants</h3>
-            <div class="substitutes">
-                <?php for($i=1; $i<=12; $i++): ?>
-                    <select name="substitute[]">
-                        <option value="">Remplaçant <?= $i ?></option>
-                        <?php foreach($players as $p): ?>
-                        <option value="<?= $p['NumeroLicence'] ?>"><?= $p['Nom'].' '.$p['Prenom'] ?></option>
+        <hr>
+
+        <h3>Remplaçants</h3>
+        <div class="substitutes-grid">
+            <?php for($i=1; $i<=5; $i++): ?>
+                <div class="sub-entry" style="margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px;">
+                    <p>Remplaçant n°<?= $i ?></p>
+                    
+                    <select name="sub_target_pos[]">
+                        <option value="">Position ?</option>
+                        <?php foreach($positions as $posName): ?>
+                            <option value="<?= $posName ?>"><?= $posName ?></option>
                         <?php endforeach; ?>
                     </select>
-                <?php endfor; ?>
-            </div>
 
-            <button type="submit">Enregistrer</button>
-        </form>
+                    <select name="substitute_player[]">
+                        <option value="">Choisir Joueur</option>
+                        <?php foreach($players as $p): ?>
+                            <option value="<?= $p['NumeroLicence'] ?>"><?= $p['Nom'].' '.$p['Prenom'] ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            <?php endfor; ?>
+        </div>
+
+        <button type="submit" style="margin-top: 20px;">Enregistrer la feuille</button>
+    </form>
+</div>
 
         <?php if (!empty($error)) echo "<p style='color:red;'>$error</p>"; ?>
         <?php if (!empty($success)) echo "<p style='color:green;'>$success</p>"; ?>

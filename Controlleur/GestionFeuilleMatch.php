@@ -13,7 +13,6 @@ class GestionFeuilleMatch {
     }
 
     public function executer() {
-        // Load active players
         $players = $this->joueurDAO->getActivePlayers();
 
         // Handle POST submission

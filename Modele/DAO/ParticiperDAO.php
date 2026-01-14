@@ -1,20 +1,57 @@
 <?php
-require_once __DIR__ . '/../Joueur.class.php';
-require_once __DIR__ . '/../MatchBasketball.class.php';
-require_once __DIR__ . '/../Participer.class.php';
 class ParticiperDAO {
     private $pdo;
 
     public function __construct() {
         try {
-             $db = 'r301php2025_db';
+            $db = 'r301php2025_db';
             $server = 'localhost';
             $login = 'root';
             $mdp = '';
-            $this->linkpdo = new PDO("mysql:host=$server;dbname=$db;charset=utf8", $login, $mdp);
-            $this->linkpdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch (Exception $e) {
+            $this->pdo = new PDO("mysql:host=$server;dbname=$db", $login, $mdp); 
+            // Good practice: set error mode to exceptions
+            $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        }
+        catch (Exception $e) {
             die('Erreur : ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * This method saves the whole match sheet at once
+     */
+    public function saveMatchSheet($date, $heure, $titulars, $substitutes) {
+        try {
+            $this->pdo->beginTransaction();
+
+            // 1. Clear previous selection for this match
+            $delete = $this->pdo->prepare("DELETE FROM Participer WHERE DateDeMatch = ? AND HeureDeMatch = ?");
+            $delete->execute([$date, $heure]);
+
+            // 2. Prepare the Insert Statement
+            $sql = "INSERT INTO Participer (NumeroLicence, DateDeMatch, HeureDeMatch, PosteOccupee, EstTitulaire, Joue) 
+                    VALUES (?, ?, ?, ?, ?, 1)";
+            $stmt = $this->pdo->prepare($sql);
+
+            // 3. Insert Titulars (EstTitulaire = 1)
+            foreach ($titulars as $pos => $licence) {
+                if (!empty($licence)) {
+                    $stmt->execute([$licence, $date, $heure, $pos, 1]);
+                }
+            }
+
+            // 4. Insert Substitutes (EstTitulaire = 0)
+            foreach ($substitutes as $sub) {
+                if (!empty($sub['licence'])) {
+                    $stmt->execute([$sub['licence'], $date, $heure, $sub['pos'], 0, 1]);
+                }
+            }
+
+            $this->pdo->commit();
+            return true;
+        } catch (Exception $e) {
+            $this->pdo->rollBack();
+            return false;
         }
     }
 
@@ -78,7 +115,7 @@ class ParticiperDAO {
 
         return $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     }
-    
+
     private function bindParticiper(PDOStatement $stmt, Participer $p) {
         $stmt->bindValue(':NumeroLicence', $p->NumeroLicence);
         $stmt->bindValue(':DateDeMatch', $p->DateDeMatch);
@@ -91,44 +128,42 @@ class ParticiperDAO {
         $stmt->bindValue(':Joue', $p->Joue, PDO::PARAM_INT);
     }
 
-    public function getTotalPointsEquipe(string $date, string $heure): int {
-        $sql = "
-            SELECT MatchID
-            FROM match_basketball
-            WHERE DateDeMatch = :date
-            AND HeureDeMatch = :heure
-        ";
-        $stmt = $this->linkpdo->prepare($sql);
-        $stmt->execute([':date' => $date, ':heure' => $heure]);
-        $match = $stmt->fetch(PDO::FETCH_ASSOC);
-        if (!$match) return 0;
-        $matchID = $match['MatchID'];
-        $sql = "
-            SELECT SUM(NbPointsMarque) AS total
-            FROM participer
-            WHERE MatchID = :matchID
-            AND Joue = 1
-        ";
-        $stmt = $this->linkpdo->prepare($sql);
-        $stmt->execute([':matchID' => $matchID]);
-        return (int) ($stmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0);
-    }
+    public function insertParticipationSimple(
+    string $numeroLicence,
+    int $matchID,
+    int $points,
+    int $titulaire,
+    int $joue,
+    ?float $note
+): bool {
+    $stmt = $this->linkpdo->prepare("
+        INSERT INTO Participer
+        (NumeroLicence, MatchID, NbPointsMarque, EstTitulaire, Joue, Note)
+        VALUES (:nl, :mid, :pts, :tit, :joue, :note)
+    ");
 
-    public function getNbMatchsJoues(string $numeroLicence): int {
-        $sql = "
-            SELECT COUNT(*) AS nbMatchs
-            FROM participer
-            WHERE NumeroLicence = :num
-                AND Joue = 1
-        ";
-        $stmt = $this->linkpdo->prepare($sql);
-        $stmt->execute([':num' => $numeroLicence]);
-        return (int) ($stmt->fetch(PDO::FETCH_ASSOC)['nbMatchs'] ?? 0);
-    }
+    return $stmt->execute([
+        ':nl'   => $numeroLicence,
+        ':mid'  => $matchID,
+        ':pts'  => $points,
+        ':tit'  => $titulaire,
+        ':joue' => $joue,
+        ':note' => $note
+    ]);
+}
 
+public function getJoueursParMatch(int $matchID): array {
+    $stmt = $this->linkpdo->prepare("
+        SELECT j.*
+        FROM Joueur j
+        JOIN Participer p ON j.NumeroLicence = p.NumeroLicence
+        WHERE p.MatchID = :matchID
+        ORDER BY j.Nom
+    ");
+    $stmt->execute([':matchID' => $matchID]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 
-
-
-
+    
 }
 ?>

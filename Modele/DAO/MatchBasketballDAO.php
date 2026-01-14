@@ -185,6 +185,22 @@ public function updateStatut($date, $heure, $nouveauStatut) {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getMatchByDateHeure(string $date, string $heure): ?array {
+    $stmt = $this->linkpdo->prepare("
+        SELECT * FROM Match_Basketball
+        WHERE DateDeMatch = :d AND HeureDeMatch = :h
+    ");
+    $stmt->execute([
+        ':d' => $date,
+        ':h' => $heure
+    ]);
+    $match = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $match ?: null;
+    }
+
+    
+
+
     }
 
 ?>
