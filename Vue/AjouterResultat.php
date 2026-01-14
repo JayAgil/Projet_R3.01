@@ -25,7 +25,9 @@ if (!$match) {
     die("Match introuvable");
 }
 
-$joueurs = $joueurDAO->getAll();
+$matchID = $match['MatchID'];
+$joueurs = $participerDAO->getJoueursParMatch($matchID);
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 

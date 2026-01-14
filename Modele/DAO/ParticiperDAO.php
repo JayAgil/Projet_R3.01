@@ -151,6 +151,19 @@ class ParticiperDAO {
         ':note' => $note
     ]);
 }
+
+public function getJoueursParMatch(int $matchID): array {
+    $stmt = $this->linkpdo->prepare("
+        SELECT j.*
+        FROM Joueur j
+        JOIN Participer p ON j.NumeroLicence = p.NumeroLicence
+        WHERE p.MatchID = :matchID
+        ORDER BY j.Nom
+    ");
+    $stmt->execute([':matchID' => $matchID]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
     
 }
 ?>
