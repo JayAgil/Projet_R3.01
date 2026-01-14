@@ -97,7 +97,7 @@
                 <td><span class="status avenir"><?= $m['Statut'] ?></span></td>
                 <td>
                   <div class="actions-group">
-                    <form action="AjouterResultat.php" method="GET">
+                    <form action="FenetreAjouterResultat.php" method="GET">
                         <input type="hidden" name="date" value="<?= $m['DateDeMatch'] ?>">
                         <input type="hidden" name="heure" value="<?= $m['HeureDeMatch'] ?>">
                         <button type="submit" class="btn-action"><span>➕</span> Résultat</button>

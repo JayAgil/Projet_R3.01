@@ -122,8 +122,8 @@ vs <?= htmlspecialchars($match['NomEquipeAdversaire']) ?>
 <tr>
     <th>Joueur</th>
     <th>Points</th>
-    <th>Titulaire</th>
-    <th>Joué</th>
+    <th>Est Titulaire</th>
+    <th>A joué</th>
     <th>Note</th>
 </tr>
 </thead>
@@ -132,22 +132,28 @@ vs <?= htmlspecialchars($match['NomEquipeAdversaire']) ?>
 <tr>
     <td><?= htmlspecialchars($j['Nom'].' '.$j['Prenom']) ?></td>
     <td>
-        <input type="number" name="joueurs[<?= $j['NumeroLicence'] ?>][points]" value="0" min="0">
+        <input type="number" name="joueurs[<?= $j['NumeroLicence'] ?>][points]" value="<?= $j['NbPointsMarque'] ?? 0 ?>" min="0">
     </td>
     <td>
-        <input type="checkbox" name="joueurs[<?= $j['NumeroLicence'] ?>][titulaire]">
+        <?= isset($j['EstTitulaire']) && $j['EstTitulaire'] ? '✔' : '❌' ?>
     </td>
     <td>
-        <input type="checkbox" name="joueurs[<?= $j['NumeroLicence'] ?>][joue]" checked>
+        <?php if (isset($j['EstTitulaire']) && $j['EstTitulaire']): ?>
+            <input type="checkbox" name="joueurs[<?= $j['NumeroLicence'] ?>][joue]" <?= isset($j['Joue']) && $j['Joue'] ? 'checked' : '' ?>>
+        <?php else: ?>
+            <span style="color: gray;">N/A</span>
+        <?php endif; ?>
     </td>
     <td>
         <input type="number" step="0.1" min="0" max="10"
-               name="joueurs[<?= $j['NumeroLicence'] ?>][note]">
+               name="joueurs[<?= $j['NumeroLicence'] ?>][note]" value="<?= $j['Note'] ?? '' ?>">
     </td>
 </tr>
 <?php endforeach; ?>
 </tbody>
 </table>
+
+
 
 <button class="btn-primary">💾 Enregistrer</button>
 
