@@ -136,7 +136,7 @@ class ParticiperDAO {
     int $joue,
     ?float $note
 ): bool {
-    $stmt = $this->linkpdo->prepare("
+    $stmt = $this->pdo->prepare("
         INSERT INTO Participer
         (NumeroLicence, MatchID, NbPointsMarque, EstTitulaire, Joue, Note)
         VALUES (:nl, :mid, :pts, :tit, :joue, :note)
@@ -153,7 +153,7 @@ class ParticiperDAO {
 }
 
 public function getJoueursParMatch(int $matchID): array {
-    $stmt = $this->linkpdo->prepare("
+    $stmt = $this->pdo->prepare("
         SELECT j.*
         FROM Joueur j
         JOIN Participer p ON j.NumeroLicence = p.NumeroLicence
@@ -161,6 +161,14 @@ public function getJoueursParMatch(int $matchID): array {
         ORDER BY j.Nom
     ");
     $stmt->execute([':matchID' => $matchID]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+public function getExistingPlayers($date, $heure) {
+    $sql = "SELECT NumeroLicence, PosteOccupee, EstTitulaire 
+            FROM Participer 
+            WHERE DateDeMatch = ? AND HeureDeMatch = ?";
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute([$date, $heure]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
