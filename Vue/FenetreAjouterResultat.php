@@ -1,5 +1,4 @@
 <?php
-session_start();
 if (!isset($_SESSION['user'])) {
     header("Location: /index.php");
     exit;
@@ -60,8 +59,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
 <meta charset="UTF-8">
 <title>Saisie Résultat</title>
-<link rel="stylesheet" href="../css/principale.css">
-<link rel="stylesheet" href="../css/resultat.css">
+<link rel="stylesheet" href="css/principale.css">
+<link rel="stylesheet" href="css/resultat.css">
 </head>
 
 <body>
@@ -76,8 +75,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </div>
 
   <nav class="nav">
-    <a class="nav-item active" href="FenetrePrincipale.php">🏠 Dashboard</a>
-    <a class="nav-item" href="FenetreJoueur.php">👥 Joueurs</a>
+    <a class="nav-item" href="/Projet_R3.01/index.php?action=dashboard">🏠 Dashboard</a>
+    <a class="nav-item" href="/Projet_R3.01/index.php?action=joueurs">👥 Joueurs</a>
   </nav>
 
   <div class="sidebar-footer">

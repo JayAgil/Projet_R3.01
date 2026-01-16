@@ -103,5 +103,17 @@ class ParticiperDAO {
 
         return $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     }
-}
+
+    public function getJoueursParMatch($matchId) {
+        $sql = "SELECT Joueur.NumeroLicence, Joueur.Nom, Joueur.Prenom, Participer.PosteOccupee 
+                FROM Joueur, Participer
+                WHERE Joueur.NumeroLicence = Participer.NumeroLicence 
+                AND Participer.MatchID = :mid";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':mid' => $matchId]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    }
 ?>
