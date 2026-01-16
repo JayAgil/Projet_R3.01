@@ -3,7 +3,6 @@ session_start();
 
 require "Controlleur/GestionFenetreLogin.php";
 require "Controlleur/GestionFenetrePrincipale.php";
-require "Controlleur/GestionFenetreJoueur.php";
 require "Controlleur/GestionFeuilleMatch.php";
 require_once "Modele/DAO/JoueurDAO.php";
 
@@ -73,8 +72,5 @@ if (!empty($_POST['DateDeMatch']) && !empty($_POST['HeureDeMatch'])) {
     exit;
 }
 
-
-
-// Default: show login page
 include "Vue/FenetreLogin.php";
 ?>
