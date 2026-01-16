@@ -1,28 +1,3 @@
-<?php
-  session_start();
-  if (!isset($_SESSION['user'])) {
-    header("Location: /index.php");
-    exit;
-  }
-
-  require_once __DIR__ . '/../Modele/DAO/MatchBasketballDAO.php';
-  require_once __DIR__ . '/../Modele/DAO/JoueurDAO.php';
-  require_once __DIR__ . '/../Modele/DAO/ParticiperDAO.php';
-
-  $matchDAO = new MatchBasketballDAO();
-  $joueurDAO = new JoueurDAO();
-  $participerDAO = new ParticiperDAO();
-
-  $totalMatchs = count($matchDAO->getAllMatches());  
-  $victoires = $matchDAO->getNbMatch("Victoire");    
-  $defaites = $matchDAO->getNbMatch("Défaite");     
-  $totalJoueurs = count($joueurDAO->getAll()); 
-
-  $matchsAvenir = $matchDAO->getMatchsAvenir();       
-  $recentResults = $matchDAO->getAllMatches();        
-  $topPlayers = $matchDAO->getTopScorers();  
-?>
-
 <!doctype html>
 <html lang="fr">
 <head>

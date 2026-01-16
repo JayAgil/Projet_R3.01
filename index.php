@@ -3,7 +3,7 @@ session_start();
 
 require "Controlleur/GestionFenetreLogin.php";
 require "Controlleur/GestionFenetrePrincipale.php";
-require "Modele/DAO/JoueurDAO.php";
+require_once "Modele/DAO/JoueurDAO.php";
 
 $erreur = '';
 
@@ -30,6 +30,8 @@ if (!empty($_POST['DateDeMatch']) && !empty($_POST['HeureDeMatch'])) {
     $controller = new GestionFeuilleMatch($_POST['DateDeMatch'], $_POST['HeureDeMatch']);
     $data = $controller->executer();
     $players = $data['players'] ?? [];
+
+    include "Vue/FeuilleDeMatch.php";
     exit;
 }
 
