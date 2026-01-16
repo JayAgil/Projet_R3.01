@@ -186,19 +186,21 @@ public function updateStatut($date, $heure, $nouveauStatut) {
     }
 
     public function getMatchByDateHeure(string $date, string $heure): ?array {
-    $stmt = $this->linkpdo->prepare("
-        SELECT * FROM Match_Basketball
-        WHERE DateDeMatch = :d AND HeureDeMatch = :h
-    ");
-    $stmt->execute([
-        ':d' => $date,
-        ':h' => $heure
-    ]);
-    $match = $stmt->fetch(PDO::FETCH_ASSOC);
-    return $match ?: null;
+        $stmt = $this->linkpdo->prepare("
+            SELECT * FROM Match_Basketball
+            WHERE DateDeMatch = :d AND HeureDeMatch = :h
+        ");
+        $stmt->execute([
+            ':d' => $date,
+            ':h' => $heure
+        ]);
+        $match = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $match ?: null;
     }
 
     
+
+
 
 
     }
