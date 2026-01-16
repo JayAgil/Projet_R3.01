@@ -1,89 +1,65 @@
 <?php
+
 class Joueur {
 
-    private $numero_licence;
-    private $statut;
-    private $commentaire;
-    private $nom;
-    private $prenom;
-    private $date_naissance;
-    private $taille;
-    private $poids;
+    private string $numeroLicence;
+    private string $nom;
+    private string $prenom;
+    private string $dateNaissance;
+    private int $tailleCm;
+    private int $poidsKg;
+    private string $statut;
+    private string $commentaire;
 
-    public function __construct($numero_licence, $statut, $commentaire, $nom, $prenom, $date_naissance, $taille,$poids) {
-        $this->numero_licence = $numero_licence;
-        $this->statut = $statut;
-        $this->commentaire = $commentaire;
+    public function __construct(
+        string $numeroLicence,
+        string $nom,
+        string $prenom,
+        ?string $dateNaissance,
+        ?int $tailleCm,
+        ?int $poidsKg,
+        ?string $statut,
+        ?string $commentaire
+    ) {
+        $this->numeroLicence = $numeroLicence;
         $this->nom = $nom;
         $this->prenom = $prenom;
-        $this->date_naissance = $date_naissance;
-        $this->taille = $taille;
-        $this->poids = $poids;
+        $this->dateNaissance = $dateNaissance;
+        $this->tailleCm = $tailleCm;
+        $this->poidsKg = $poidsKg;
+        $this->statut = $statut;
+        $this->commentaire = $commentaire;
     }
 
     public function getNumeroLicence() {
-        return $this->numero_licence;
-    }
-
-    public function setNumeroLicence($n) {
-        $this->numero_licence = $n;
-    }
-
-    public function getStatut() {
-        return $this->statut;
-    }
-
-    public function setStatut($s) {
-        $this->statut = $s;
-    }
-
-    public function getCommentaire() {
-        return $this->commentaire;
-    }
-
-    public function setCommentaire($c) {
-        $this->commentaire = $c;
+        return $this->numeroLicence;
     }
 
     public function getNom() {
         return $this->nom;
     }
 
-    public function setNom($n) {
-        $this->nom = $n;
-    }
-
     public function getPrenom() {
         return $this->prenom;
     }
 
-    public function setPrenom($p) {
-        $this->prenom = $p;
-    }
-
     public function getDateNaissance() {
-        return $this->date_naissance;
-    }
-
-    public function setDateNaissance($d) {
-        $this->date_naissance = $d;
+        return $this->dateNaissance;
     }
 
     public function getTaille() {
-        return $this->taille."cm";
-    }
-
-    public function setTaille($t) {
-        $this->taille = $t;
+        return $this->tailleCm;
     }
 
     public function getPoids() {
-        return $this->poids;
+        return $this->poidsKg;
     }
 
-    public function setPoids($p) {
-        $this->poids = $p."kg";
+    public function getStatut() {
+        return $this->statut;
     }
 
+    public function getCommentaire() {
+        return $this->commentaire;
+    }
 }
-?>
