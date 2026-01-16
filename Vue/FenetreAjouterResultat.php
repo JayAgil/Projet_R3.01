@@ -59,36 +59,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
 <meta charset="UTF-8">
 <title>Saisie Résultat</title>
-<link rel="stylesheet" href="css/principale.css">
-<link rel="stylesheet" href="css/resultat.css">
+    <link rel="stylesheet" href="css/principale.css">
+    <link rel="stylesheet" href="css/resultat.css">
+    <link rel="stylesheet" href="css/ajouterMatch.css">
 </head>
 
 <body>
 <div class="app">
 <aside class="sidebar" id="sidebar">
-  <div class="brand">
-    <svg class="logo" viewBox="0 0 24 24">
-      <path d="M3 3h8v8H3zM13 3h8v8h-8zM3 13h8v8H3zM13 13h8v8h-8z"/>
-    </svg>
-    <span class="brand-text">Gestion Matchs</span>
-    <button class="btn-toggle" id="btnToggle">☰</button>
-  </div>
+        <div class="brand">
+            <svg class="logo" viewBox="0 0 24 24">
+                <path d="M3 3h8v8H3zM13 3h8v8h-8zM3 13h8v8H3zM13 13h8v8h-8z"/>
+            </svg>
+            <span class="brand-text">Gestion Matchs</span>
+            <button class="btn-toggle" id="btnToggle">☰</button>
+        </div>
 
-  <nav class="nav">
-    <a class="nav-item" href="/Projet_R3.01/index.php?action=dashboard">🏠 Dashboard</a>
-    <a class="nav-item" href="/Projet_R3.01/index.php?action=joueurs">👥 Joueurs</a>
-  </nav>
+        <nav class="nav">
+            <a class="nav-item active" href="/Projet_R3.01/index.php?action=dashboard">
+                <span>🏠</span><span class="label">Dashboard</span>
+            </a>
+            <a class="nav-item" href="/Projet_R3.01/index.php?action=joueurs">
+                <span>👥</span><span class="label">Joueurs</span>
+            </a>
+            <a class="nav-item" href="/Projet_R3.01/index.php?action=ajouterMatch">
+                <span>➕</span><span class="label">Ajouter Match</span>
+            </a>
+        </nav>
 
-  <div class="sidebar-footer">
-    <div class="user">
-      <div class="avatar">GM</div>
-      <div class="user-info">
-        <div class="name">Admin</div>
-        <div class="role">Gestionnaire</div>
-      </div>
-    </div>
-  </div>
-</aside>
+        <div class="sidebar-footer">
+            <div class="user">
+                <div class="avatar">GM</div>
+                <div class="user-info">
+                    <div class="name">Admin</div>
+                    <div class="role">Gestionnaire</div>
+                </div>
+            </div>
+        </div>
+    </aside>
 
 <div class="main">
 <div class="content">

@@ -53,9 +53,31 @@ switch ($action) {
         } else {
             die("Match non spécifié");
         }
+    case 'ajouterMatch':
+        require "Vue/FenetreAjouterMatch.php";
+        exit;
+
+    case 'saveMatch':
+    if (!empty($_POST['date']) && !empty($_POST['heure'])) {
+        require_once "Modele/DAO/MatchBasketballDAO.php";
+        $dao = new MatchBasketballDAO();
+        $dao->insertMatch(
+            $_POST['date'],
+            $_POST['heure'],
+            $_POST['equipe'],
+            $_POST['lieu'],
+            $_POST['resultat'] ?? 'N/A',
+            $_POST['pointsAdv'] ?? 0,
+            $_POST['statut']
+        );
+        header("Location: index.php?action=dashboard");
+        exit;
+    } else {
+        die("Données du match manquantes !");
+    }
+
 
     default:
-        // Unknown action → redirect to dashboard
         header("Location: index.php?action=dashboard");
         exit;
 }
