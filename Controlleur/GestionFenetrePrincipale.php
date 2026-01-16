@@ -6,12 +6,8 @@ require_once __DIR__ . '/../Modele/DAO/ParticiperDAO.php';
 class GestionFenetrePrincipale {
 
     public function afficherFenetrePrincipale() {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
-
         if (!isset($_SESSION['user'])) {
-            header("Location: /index.php");
+            header("Location: index.php");
             exit;
         }
 
@@ -19,15 +15,16 @@ class GestionFenetrePrincipale {
         $joueurDAO = new JoueurDAO();
         
         $allMatches = $matchDAO->getAllMatches();
-        $totalMatchs = count($allMatches);  
-        $victoires = $matchDAO->getNbMatch("Victoire");    
-        $defaites = $matchDAO->getNbMatch("Défaite");     
-        $totalJoueurs = count($joueurDAO->getAll()); 
-
-        $matchsAvenir = $matchDAO->getMatchsAvenir();       
-        $recentResults = $allMatches;        
-        $topPlayers = $matchDAO->getTopScorers(); 
-
+        $data = [
+            'totalMatchs'   => count($allMatches),
+            'victoires'     => $matchDAO->getNbMatch("Victoire"),
+            'defaites'      => $matchDAO->getNbMatch("Défaite"),
+            'totalJoueurs'  => count($joueurDAO->getAll()),
+            'matchsAvenir'  => $matchDAO->getMatchsAvenir(),
+            'recentResults' => $allMatches,
+            'topPlayers'    => $matchDAO->getTopScorers()
+        ];
+        extract($data);
         require "Vue/FenetrePrincipale.php";
     }
 }

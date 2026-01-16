@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Dashboard – Gestion Matchs</title>
-  <link rel="stylesheet" href="../css/principale.css" />
+  <link rel="stylesheet" href="/Projet_R3.01/css/principale.css">
 </head>
 <body>
 
@@ -17,8 +17,8 @@
     </div>
 
     <nav class="nav">
-      <a class="nav-item active" href="FenetrePrincipale.php">🏠 Dashboard</a>
-      <a class="nav-item" href="FenetreJoueur.php">👥 Joueurs</a>
+      <a class="nav-item active" href="/Projet_R3.01/index.php?action=dashboard">🏠 Dashboard</a>
+      <a class="nav-item" href="/Projet_R3.01/index.php?action=joueurs">👥 Joueurs</a>
     </nav>
 
     <div class="sidebar-footer">
@@ -72,7 +72,8 @@
                 <td><span class="status avenir"><?= $m['Statut'] ?></span></td>
                 <td>
                   <div class="actions-group">
-                    <form action="FenetreAjouterResultat.php" method="GET">
+                    <form action="../index.php" method="GET">
+                        <input type="hidden" name="action" value="ajouterResultat">
                         <input type="hidden" name="date" value="<?= $m['DateDeMatch'] ?>">
                         <input type="hidden" name="heure" value="<?= $m['HeureDeMatch'] ?>">
                         <button type="submit" class="btn-action"><span>➕</span> Résultat</button>
