@@ -1,77 +1,117 @@
 <?php
 require_once __DIR__ . '/../Modele/DAO/JoueurDAO.php';
+require_once __DIR__ . '/../Modele/Joueur.class.php';
 
-$joueurDAO = new JoueurDAO();
-$action = $_GET['action'] ?? '';
+class GestionFenetreJoueur {
 
-// ----------------------------
-// SHOW ADD FORM
-// ----------------------------
-if ($action === 'add') {
-    require __DIR__ . '/../Vue/FenetreAjouterJoueur.php';
-    exit;
+    private JoueurDAO $joueurDAO;
+
+    public function __construct() {
+        $this->joueurDAO = new JoueurDAO();
+    }
+
+    public function gererAction() {
+        $action = $_GET['action'] ?? '';
+
+        switch ($action) {
+            case 'add':
+                $this->afficherAjouterJoueur();
+                break;
+
+            case 'store':
+                $this->stockerJoueur();
+                break;
+
+            case 'edit':
+                $this->afficherModifierJoueur();
+                break;
+
+            case 'update':
+                $this->updateJoueur();
+                break;
+
+            case 'delete':
+                $this->deleteJoueur();
+                break;
+
+            default:
+                $this->afficherListeJoueur();
+                break;
+        }
+    }
+
+    private function afficherAjouterJoueur() {
+        require __DIR__ . '/../Vue/FenetreAjouterJoueur.php';
+        exit;
+    }
+
+    private function stockerJoueur() {
+        $nouveauJoueur = new Joueur(
+            $_GET['NumeroLicence'] ?? '',
+            $_GET['Nom'] ?? '',
+            $_GET['Prenom'] ?? '',
+            $_GET['DateDeNaissance'] ?? '',
+            $_GET['Taille_cm'] ?? 0,
+            $_GET['Poids_kg'] ?? 0,
+            $_GET['Statut'] ?? '',
+            $_GET['Commentaire'] ?? ''
+        );
+
+        $this->joueurDAO->insert($nouveauJoueur);
+        $this->afficherListeJoueur();
+    }
+
+    private function afficherModifierJoueur() {
+        if (!isset($_GET['NumeroLicence'])) {
+            echo 'Erreur : numéro de licence manquant.';
+            exit;
+        }
+
+        $joueur = $this->joueurDAO->getById($_GET['NumeroLicence']);
+        if (!$joueur) {
+            echo 'Erreur : joueur introuvable.';
+            exit;
+        }
+
+        require __DIR__ . '/../Vue/FenetreModifierJoueur.php';
+        exit;
+    }
+
+    private function updateJoueur() {
+        if (!isset($_GET['NumeroLicence'])) {
+            echo 'Erreur : numéro de licence manquant.';
+            exit;
+        }
+
+        $joueurModifie = new Joueur(
+            $_GET['NumeroLicence'],
+            $_GET['Nom'] ?? '',
+            $_GET['Prenom'] ?? '',
+            $_GET['DateDeNaissance'] ?? '',
+            $_GET['Taille_cm'] ?? 0,
+            $_GET['Poids_kg'] ?? 0,
+            $_GET['Statut'] ?? '',
+            $_GET['Commentaire'] ?? ''
+        );
+
+        $this->joueurDAO->update($joueurModifie);
+        $this->afficherListeJoueur();
+    }
+
+    private function deleteJoueur() {
+        if (!isset($_GET['id'])) {
+            $this->afficherListeJoueur();
+        }
+
+        $this->joueurDAO->delete($_GET['id']);
+        $this->afficherListeJoueur();
+    }
+
+    private function afficherListeJoueur() {
+        header('Location: ../Vue/FenetreJoueur.php');
+        exit;
+    }
 }
 
-// ----------------------------
-// STORE NEW JOUER
-// ----------------------------
-if ($action === 'store') {
-    // Create a Joueur object from GET data
-    $nouveauJoueur = new Joueur(
-        $_GET['NumeroLicence'],
-        $_GET['Nom'],
-        $_GET['Prenom'],
-        $_GET['DateDeNaissance'],
-        $_GET['Taille_cm'],
-        $_GET['Poids_kg'],
-        $_GET['Statut'],
-        $_GET['Commentaire']
-    );
-
-    $joueurDAO->insert($nouveauJoueur);
-
-    // Redirect to table after adding
-    header('Location: ../Vue/FenetreJoueur.php');
-    exit;
-}
-
-// ----------------------------
-// SHOW EDIT FORM
-// ----------------------------
-if ($action === 'edit' && isset($_GET['id'])) {
-    $joueur = $joueurDAO->getById($_GET['id']);
-    require __DIR__ . '/../Vue/FenetreModifierJoueur.php';
-    exit;
-}
-
-// ----------------------------
-// UPDATE JOUER
-// ----------------------------
-if ($action === 'update' && isset($_GET['NumeroLicence'])) {
-    // Create a Joueur object with updated data
-    $joueurModifie = new Joueur(
-        $_GET['NumeroLicence'],
-        $_GET['Nom'],
-        $_GET['Prenom'],
-        $_GET['DateDeNaissance'],
-        $_GET['Taille_cm'],
-        $_GET['Poids_kg'],
-        $_GET['Statut'],
-        $_GET['Commentaire']
-    );
-
-    $joueurDAO->update($joueurModifie);
-
-    // Redirect to table after updating
-    header('Location: ../Vue/FenetreJoueur.php');
-    exit;
-}
-
-// ----------------------------
-// DELETE JOUER
-// ----------------------------
-if ($action === 'delete' && isset($_GET['id'])) {
-    $joueurDAO->delete($_GET['id']);
-    header('Location: ../Vue/FenetreJoueur.php');
-    exit;
-}
+$controller = new GestionFenetreJoueur();
+$controller->gererAction();

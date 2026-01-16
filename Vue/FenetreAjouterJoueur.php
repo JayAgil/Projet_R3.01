@@ -11,7 +11,6 @@
 
   <form method="GET" action="../Controlleur/GestionFenetreJoueur.php">
 
-      <!-- Pass action as hidden GET parameter -->
       <input type="hidden" name="action" value="store">
 
       <label>Numéro Licence</label>
@@ -39,11 +38,8 @@
       <textarea name="Commentaire"></textarea>
 
       <div class="form-buttons">
-          <!-- Submit via GET -->
           <button type="submit">Ajouter</button>
-
-          <!-- Cancel button (still a GET link) -->
-          <a href="FenetreJoueur.php">Annuler</a>
+          <a href="/Projet_R3.01/Vue/FenetreJoueur.php">Annuler</a>
       </div>
   </form>
 </div>
