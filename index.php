@@ -30,8 +30,6 @@ if (!empty($_POST['DateDeMatch']) && !empty($_POST['HeureDeMatch'])) {
     $controller = new GestionFeuilleMatch($_POST['DateDeMatch'], $_POST['HeureDeMatch']);
     $data = $controller->executer();
     $players = $data['players'] ?? [];
-
-    include "Vue/FeuilleDeMatch.php";
     exit;
 }
 
