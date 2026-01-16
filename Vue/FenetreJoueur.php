@@ -44,13 +44,13 @@ if ($searchTerm !== '') {
             <div class="joueur">
                 <h1>Joueurs</h1>
 
-                <!-- ADD BUTTON -->
                 <form method="GET" action="../Controlleur/GestionFenetreJoueur.php" style="margin-bottom:16px;">
                     <input type="hidden" name="action" value="add">
-                    <button type="submit" style="padding:8px 14px; border-radius:8px; border:1px solid rgba(11,18,32,0.15); background:#fff; cursor:pointer;">➕ Ajouter un joueur</button>
+                    <button type="submit" style="padding:8px 14px; border-radius:8px; border:1px solid rgba(11,18,32,0.15); background:#fff; cursor:pointer;">
+                        ➕ Ajouter un joueur
+                    </button>
                 </form>
 
-                <!-- SEARCH FORM -->
                 <form method="GET" class="rechercher">
                     <input
                         type="text"
@@ -87,23 +87,23 @@ if ($searchTerm !== '') {
                                 <td><?= htmlspecialchars($j['Poids_kg']) ?></td>
                                 <td><?= htmlspecialchars($j['Statut']) ?></td>
                                 <td><?= htmlspecialchars($j['Commentaire']) ?></td>
-
-                                <!-- ACTIONS -->
                                 <td>
                                     <div class="actions-group" style="display:flex; gap:6px;">
 
-                                        <!-- EDIT BUTTON -->
                                         <form method="GET" action="../Controlleur/GestionFenetreJoueur.php">
                                             <input type="hidden" name="action" value="edit">
-                                            <input type="hidden" name="id" value="<?= $j['NumeroLicence'] ?>">
-                                            <button type="submit" style="padding:4px 8px; border-radius:6px; border:1px solid rgba(11,18,32,0.15); background:#fff; cursor:pointer;">✏️</button>
+                                            <input type="hidden" name="NumeroLicence" value="<?= htmlspecialchars($j['NumeroLicence']) ?>">
+                                            <button type="submit" style="padding:4px 8px; border-radius:6px; border:1px solid rgba(11,18,32,0.15); background:#fff; cursor:pointer;">
+                                                ✏️
+                                            </button>
                                         </form>
 
-                                        <!-- DELETE BUTTON -->
                                         <form method="GET" action="../Controlleur/GestionFenetreJoueur.php" onsubmit="return confirm('Supprimer ce joueur ?');">
                                             <input type="hidden" name="action" value="delete">
-                                            <input type="hidden" name="id" value="<?= $j['NumeroLicence'] ?>">
-                                            <button type="submit" style="padding:4px 8px; border-radius:6px; border:1px solid rgba(11,18,32,0.15); background:#fff; cursor:pointer;">🗑️</button>
+                                            <input type="hidden" name="id" value="<?= htmlspecialchars($j['NumeroLicence']) ?>">
+                                            <button type="submit" style="padding:4px 8px; border-radius:6px; border:1px solid rgba(11,18,32,0.15); background:#fff; cursor:pointer;">
+                                                🗑️
+                                            </button>
                                         </form>
 
                                     </div>

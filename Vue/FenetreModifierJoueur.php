@@ -10,42 +10,45 @@
 <div class="form-joueur">
     <h1>Modifier un joueur</h1>
 
+    <?php if (!isset($joueur) || !$joueur): ?>
+        <p>Erreur : joueur introuvable.</p>
+    <?php else: ?>
     <form method="GET" action="../Controlleur/GestionFenetreJoueur.php">
 
-        <!-- Hidden inputs to tell controller what to do -->
         <input type="hidden" name="action" value="update">
-        <input type="hidden" name="NumeroLicence" value="<?= htmlspecialchars($joueur['NumeroLicence']) ?>">
+        <input type="hidden" name="NumeroLicence" value="<?= htmlspecialchars($joueur->getNumeroLicence()) ?>">
 
         <label>Numéro Licence</label>
-        <input type="text" value="<?= htmlspecialchars($joueur['NumeroLicence']) ?>" disabled>
+        <input type="text" value="<?= htmlspecialchars($joueur->getNumeroLicence()) ?>" disabled>
 
         <label>Nom</label>
-        <input type="text" name="Nom" value="<?= htmlspecialchars($joueur['Nom']) ?>" required>
+        <input type="text" name="Nom" value="<?= htmlspecialchars($joueur->getNom()) ?>" required>
 
         <label>Prénom</label>
-        <input type="text" name="Prenom" value="<?= htmlspecialchars($joueur['Prenom']) ?>" required>
+        <input type="text" name="Prenom" value="<?= htmlspecialchars($joueur->getPrenom()) ?>" required>
 
         <label>Date de naissance</label>
-        <input type="date" name="DateDeNaissance" value="<?= htmlspecialchars($joueur['DateDeNaissance']) ?>">
+        <input type="date" name="DateDeNaissance" value="<?= htmlspecialchars($joueur->getDateNaissance()) ?>">
 
         <label>Taille (cm)</label>
-        <input type="number" name="Taille_cm" value="<?= htmlspecialchars($joueur['Taille_cm']) ?>">
+        <input type="number" name="Taille_cm" value="<?= htmlspecialchars($joueur->getTaille()) ?>">
 
         <label>Poids (kg)</label>
-        <input type="number" name="Poids_kg" value="<?= htmlspecialchars($joueur['Poids_kg']) ?>">
+        <input type="number" name="Poids_kg" value="<?= htmlspecialchars($joueur->getPoids()) ?>">
 
         <label>Statut</label>
-        <input type="text" name="Statut" value="<?= htmlspecialchars($joueur['Statut']) ?>">
+        <input type="text" name="Statut" value="<?= htmlspecialchars($joueur->getStatut()) ?>">
 
         <label>Commentaire</label>
-        <textarea name="Commentaire"><?= htmlspecialchars($joueur['Commentaire']) ?></textarea>
+        <textarea name="Commentaire"><?= htmlspecialchars($joueur->getCommentaire()) ?></textarea>
 
         <div class="form-buttons">
             <button type="submit">Enregistrer</button>
-            <a href="FenetreJoueur.php">Annuler</a>
+            <a href="/Projet_R3.01/Vue/FenetreJoueur.php">Annuler</a>
         </div>
 
     </form>
+    <?php endif; ?>
 </div>
 
 </body>
