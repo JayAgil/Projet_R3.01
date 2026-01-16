@@ -9,65 +9,90 @@ class ParticiperDAO {
             $login = 'root';
             $mdp = '';
             $this->pdo = new PDO("mysql:host=$server;dbname=$db", $login, $mdp); 
-            // Good practice: set error mode to exceptions
             $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
         catch (Exception $e) {
             die('Erreur : ' . $e->getMessage());
         }
     }
-    
 
-    public function insertParticiper(Participer $p) {
-        $sql = "INSERT INTO Participer 
-                (NumeroLicence, DateDeMatch, HeureDeMatch, Note, NbPointsMarque, PosteOccupee, EstTitulaire, Commentaire, Joue)
-                VALUES (:NumeroLicence, :DateDeMatch, :HeureDeMatch, :Note, :NbPointsMarque, :PosteOccupee, :EstTitulaire, :Commentaire, :Joue)";
-        
-        $stmt = $this->pdo->prepare($sql);
-        $this->bindParticiper($stmt, $p);
-        return $stmt->execute();
-    }
-
-    public function deleteParticiper(string $numeroLicence, string $dateDeMatch, string $heureDeMatch) {
-        $sql = "DELETE FROM Participer 
-                WHERE NumeroLicence = :NumeroLicence
-                AND DateDeMatch = :DateDeMatch
-                AND HeureDeMatch = :HeureDeMatch";
-
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindValue(':NumeroLicence', $numeroLicence);
-        $stmt->bindValue(':DateDeMatch', $dateDeMatch);
-        $stmt->bindValue(':HeureDeMatch', $heureDeMatch);
-
-        return $stmt->execute();
-    }
-
-    public function updateParticiper(Participer $p) {
-        $sql = "UPDATE Participer SET
-                    Note = :Note,
-                    NbPointsMarque = :NbPointsMarque,
-                    PosteOccupee = :PosteOccupee,
-                    EstTitulaire = :EstTitulaire,
-                    Commentaire = :Commentaire,
-                    Joue = :Joue
-                WHERE NumeroLicence = :NumeroLicence
-                AND DateDeMatch = :DateDeMatch
-                AND HeureDeMatch = :HeureDeMatch";
-
-        $stmt = $this->pdo->prepare($sql);
-        $this->bindParticiper($stmt, $p);
-        return $stmt->execute();
-    }
-
-    public function getJoueurQuiJoue(string $date, string $heure) {
+    /**
+     * Updated: Now uses MatchID to find players who played
+     */
+    public function getJoueurQuiJoue(string $matchId) {
         $sql = "SELECT * FROM Participer 
-                WHERE DateDeMatch = :d 
-                AND HeureDeMatch = :h 
+                WHERE MatchID = :mid 
                 AND Joue = 1";
 
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([':d' => $date, ':h' => $heure]);
+        $stmt->execute([':mid' => $matchId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Updated: Deletes based on MatchID
+     */
+    public function deleteParticiper(string $numeroLicence, string $matchId) {
+        $sql = "DELETE FROM Participer 
+                WHERE NumeroLicence = :NumeroLicence
+                AND MatchID = :MatchID";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':NumeroLicence', $numeroLicence);
+        $stmt->bindValue(':MatchID', $matchId);
+
+        return $stmt->execute();
+    }
+
+    /**
+     * Logic for Feuille de Match: Pre-filling the combo boxes
+     */
+    public function getExistingPlayers($matchId) {
+        $sql = "SELECT NumeroLicence, PosteOccupee, EstTitulaire 
+                FROM Participer 
+                WHERE MatchID = ?"; 
+                
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$matchId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Logic for Feuille de Match: Saving and Redirecting
+     */
+    public function saveMatchSheet($matchId, $titulars, $substitutes) {
+        try {
+            $this->pdo->beginTransaction();
+
+            // 1. Remove old sheet for this match to allow updates
+            $stmt = $this->pdo->prepare("DELETE FROM Participer WHERE MatchID = ?");
+            $stmt->execute([$matchId]);
+
+            // 2. Insert new sheet
+            $sql = "INSERT INTO Participer (NumeroLicence, MatchID, PosteOccupee, EstTitulaire, Joue) 
+                    VALUES (?, ?, ?, ?, ?)";
+            $stmt = $this->pdo->prepare($sql);
+
+            // Insert Titulars (Joue = 1)
+            foreach ($titulars as $pos => $licence) {
+                if(!empty($licence)) {
+                    $stmt->execute([$licence, $matchId, $pos, 1, 1]);
+                }
+            }
+
+            // Insert Substitutes (Joue = 0 or 1 depending on coach choice, here 0 for "on bench")
+            foreach ($substitutes as $sub) {
+                if(!empty($sub['licence'])) {
+                    $stmt->execute([$sub['licence'], $matchId, $sub['pos'], 0, 1]);
+                }
+            }
+
+            $this->pdo->commit();
+            return true;
+        } catch (Exception $e) {
+            $this->pdo->rollBack();
+            return false;
+        }
     }
 
     public function getRangJoueurPoints(): array {
@@ -78,96 +103,5 @@ class ParticiperDAO {
 
         return $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     }
-
-    private function bindParticiper(PDOStatement $stmt, Participer $p) {
-        $stmt->bindValue(':NumeroLicence', $p->NumeroLicence);
-        $stmt->bindValue(':DateDeMatch', $p->DateDeMatch);
-        $stmt->bindValue(':HeureDeMatch', $p->HeureDeMatch);
-        $stmt->bindValue(':Note', $p->Note);
-        $stmt->bindValue(':NbPointsMarque', $p->NbPointsMarque);
-        $stmt->bindValue(':PosteOccupee', $p->PosteOccupee);
-        $stmt->bindValue(':EstTitulaire', $p->EstTitulaire, PDO::PARAM_INT);
-        $stmt->bindValue(':Commentaire', $p->Commentaire);
-        $stmt->bindValue(':Joue', $p->Joue, PDO::PARAM_INT);
-    }
-
-    public function insertParticipationSimple(
-    string $numeroLicence,
-    int $matchID,
-    int $points,
-    int $titulaire,
-    int $joue,
-    ?float $note
-): bool {
-    $stmt = $this->pdo->prepare("
-        INSERT INTO Participer
-        (NumeroLicence, MatchID, NbPointsMarque, EstTitulaire, Joue, Note)
-        VALUES (:nl, :mid, :pts, :tit, :joue, :note)
-    ");
-
-    return $stmt->execute([
-        ':nl'   => $numeroLicence,
-        ':mid'  => $matchID,
-        ':pts'  => $points,
-        ':tit'  => $titulaire,
-        ':joue' => $joue,
-        ':note' => $note
-    ]);
-}
-
-public function getJoueursParMatch(int $matchID): array {
-    $stmt = $this->pdo->prepare("
-        SELECT j.*
-        FROM Joueur j
-        JOIN Participer p ON j.NumeroLicence = p.NumeroLicence
-        WHERE p.MatchID = :matchID
-        ORDER BY j.Nom
-    ");
-    $stmt->execute([':matchID' => $matchID]);
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-public function getExistingPlayers($matchId) {
-    // We now filter by matchId only
-    $sql = "SELECT NumeroLicence, PosteOccupee, EstTitulaire 
-            FROM Participer 
-            WHERE matchId = ?"; 
-            
-    $stmt = $this->pdo->prepare($sql);
-    $stmt->execute([$matchId]);
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-
-public function saveMatchSheet($matchId, $titulars, $substitutes) {
-    try {
-        $this->pdo->beginTransaction();
-
-        // Remove old sheet for this match
-        $stmt = $this->pdo->prepare("DELETE FROM Participer WHERE MatchID = ?");
-        $stmt->execute([$matchId]);
-
-        // Insert new sheet
-        $sql = "INSERT INTO Participer (NumeroLicence, MatchID, PosteOccupee, EstTitulaire, Joue) VALUES (?, ?, ?, ?, 1)";
-        $stmt = $this->pdo->prepare($sql);
-
-        // Titulars
-        foreach ($titulars as $pos => $licence) {
-            $stmt->execute([$licence, $matchId, $pos, 1]);
-        }
-
-        // Substitutes
-        foreach ($substitutes as $sub) {
-            $stmt->execute([$sub['licence'], $matchId, $sub['pos'], 0]);
-        }
-
-        $this->pdo->commit();
-        return true;
-    } catch (Exception $e) {
-        $this->pdo->rollBack();
-        return false;
-    }
-
-}
-
-    
 }
 ?>

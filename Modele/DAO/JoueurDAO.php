@@ -151,4 +151,24 @@ class JoueurDAO {
             $data['Commentaire']
         );
     }
+
+    /**
+ * Fetches all players whose status is 'Actif'
+ * Used to populate the combo boxes in the match sheet.
+ */
+public function getActivePlayers() {
+    try {
+        $sql = "SELECT * FROM Joueur WHERE Statut = 'Actif' ORDER BY Nom, Prenom";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        // Log error or handle it as per your project standards
+        error_log("Error in getActivePlayers: " . $e->getMessage());
+        return [];
+    }
+}
+
+
 }
