@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/../Modele/DAO/JoueurDAO.php';
-require_once __DIR__ . '/../Modele/Joueur.php'; // Include Joueur class
 
 $joueurDAO = new JoueurDAO();
 $action = $_GET['action'] ?? '';
