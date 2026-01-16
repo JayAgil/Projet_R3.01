@@ -79,11 +79,12 @@
                       <button type="submit" class="btn-action"><span>➕</span> Résultat</button>
                     </form>
 
-                    <form action="/Projet_R3.01/index.php" method="POST" class="action-form">
-                      <input type="hidden" name="DateDeMatch" value="<?= $m['DateDeMatch'] ?>">
-                      <input type="hidden" name="HeureDeMatch" value="<?= $m['HeureDeMatch'] ?>">
+                   <form action="/Projet_R3.01/index.php" method="GET" class="action-form">
+                      <input type="hidden" name="action" value="feuille">
+                      <input type="hidden" name="date" value="<?= $m['DateDeMatch'] ?>">
+                      <input type="hidden" name="heure" value="<?= $m['HeureDeMatch'] ?>">
                       <button type="submit" class="btn-action"><span>📋</span> Feuille</button>
-                    </form>
+                  </form>
                   </div>
                 </td>
               </tr>
