@@ -1,21 +1,33 @@
-/* --- Joueur table --- */
+
+:root {
+  --text: #0b1220;
+  --muted: #64748b;
+  --shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #f8fafc;
+}
+
+
 .joueur {
   width: 100%;
 }
-
 .joueur h1 {
   margin: 0 0 16px 0;
   font-size: 22px;
   font-weight: 600;
   color: var(--text);
 }
-
 .rechercher {
   display: flex;
   gap: 10px;
   margin-bottom: 16px;
 }
-
 .rechercher input {
   padding: 8px 12px;
   width: 260px;
@@ -23,7 +35,6 @@
   border: 1px solid rgba(11,18,32,0.15);
   outline: none;
 }
-
 .rechercher button {
   padding: 8px 14px;
   border-radius: 8px;
@@ -31,11 +42,9 @@
   background: #fff;
   cursor: pointer;
 }
-
 .rechercher button:hover {
   background: #f1f5f9;
 }
-
 .joueur table {
   width: 100%;
   border-collapse: collapse;
@@ -44,7 +53,6 @@
   overflow: hidden;
   box-shadow: var(--shadow);
 }
-
 .joueur table th {
   text-align: left;
   padding: 12px;
@@ -53,28 +61,23 @@
   background: #f8fafc;
   border-bottom: 1px solid rgba(11,18,32,0.08);
 }
-
 .joueur table td {
   padding: 12px;
   border-bottom: 1px solid rgba(11,18,32,0.05);
   font-size: 14px;
 }
-
 .joueur table tbody tr:nth-child(even) {
   background: #f9fafb;
 }
-
 .joueur table tbody tr:hover {
   background: #eef2ff;
 }
-
 .joueur table td[colspan] {
   text-align: center;
   color: var(--muted);
   padding: 20px;
 }
 
-/* --- Forms for Ajouter / Modifier --- */
 .form-joueur {
   width: 100%;
   max-width: 600px;
@@ -85,27 +88,27 @@
   margin: 24px auto;
   font-family: sans-serif;
 }
-
 .form-joueur h1 {
   margin: 0 0 20px 0;
   font-size: 22px;
   font-weight: 600;
   color: var(--text);
 }
-
 .form-joueur form {
   display: flex;
   flex-direction: column;
   gap: 14px;
 }
-
+.form-joueur form > div {
+  display: flex;
+  flex-direction: column;
+}
 .form-joueur label {
   font-size: 14px;
   font-weight: 500;
   margin-bottom: 4px;
   color: var(--muted);
 }
-
 .form-joueur input,
 .form-joueur textarea {
   padding: 10px 12px;
@@ -115,13 +118,16 @@
   font-size: 14px;
   width: 100%;
   box-sizing: border-box;
+  font-family: inherit;
 }
-
+.form-joueur input:focus,
+.form-joueur textarea:focus {
+  border-color: #3b82f6;
+}
 .form-joueur textarea {
   min-height: 80px;
   resize: vertical;
 }
-
 .form-joueur button {
   padding: 10px 16px;
   border-radius: 8px;
@@ -130,20 +136,18 @@
   cursor: pointer;
   font-weight: 500;
   transition: background 0.2s;
+  font-size: 14px;
 }
-
 .form-joueur button:hover {
   background: #f1f5f9;
 }
 
-/* Buttons container */
 .form-buttons {
   display: flex;
   gap: 10px;
   margin-top: 14px;
 }
 
-/* Cancel link styling */
 .form-buttons a,
 .form-joueur a {
   display: inline-block;
@@ -155,35 +159,31 @@
   color: var(--text);
   cursor: pointer;
   transition: background 0.2s;
+  font-size: 14px;
+  text-align: center;
 }
-
 .form-buttons a:hover,
 .form-joueur a:hover {
   background: #f1f5f9;
 }
 
-/* --- Responsive --- */
 @media (max-width: 880px) {
   .rechercher {
     flex-direction: column;
     align-items: stretch;
   }
-
   .rechercher input {
     width: 100%;
   }
-
   .joueur table {
     font-size: 13px;
   }
 }
-
 @media (max-width: 600px) {
   .form-joueur {
     padding: 16px;
     margin: 16px;
   }
-
   .form-joueur button,
   .form-buttons a {
     width: 100%;

@@ -22,21 +22,45 @@ if ($searchTerm !== '') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Table des joueurs</title>
-    <link rel="stylesheet" href="../css/principale.css">
-    <link rel="stylesheet" href="../css/joueur.css">
+    <link rel="stylesheet" href="/Projet_R3.01/css/principale.css">
+    <link rel="stylesheet" href="/Projet_R3.01/css/joueur.css">
 </head>
 <body>
 
 <div class="app">
     <aside class="sidebar" id="sidebar">
         <div class="brand">
+            <svg class="logo" viewBox="0 0 24 24">
+                <path d="M3 3h8v8H3zM13 3h8v8h-8zM3 13h8v8H3zM13 13h8v8h-8z"/>
+            </svg>
             <span class="brand-text">Gestion Matchs</span>
+            <button class="btn-toggle" id="btnToggle">☰</button>
         </div>
 
         <nav class="nav">
-            <a class="nav-item active" href="FenetrePrincipale.php">🏠 Dashboard</a>
-            <a class="nav-item" href="FenetreJoueur.php">👥 Joueurs</a>
+            <a class="nav-item" href="/Projet_R3.01/index.php?action=dashboard">
+                <span>🏠</span><span class="label">Dashboard</span>
+            </a>
+            <a class="nav-item active" href="/Projet_R3.01/index.php?action=joueurs">
+                <span>👥</span><span class="label">Joueurs</span>
+            </a>
+            <a class="nav-item" href="/Projet_R3.01/index.php?action=ajouterMatch">
+                <span>➕</span><span class="label">Ajouter Match</span>
+            </a>
+            <a class="nav-item" href="/Projet_R3.01/index.php?action=statistiques">
+                <span>📊</span><span class="label">Statistiques</span>
+            </a>
         </nav>
+
+        <div class="sidebar-footer">
+            <div class="user">
+                <div class="avatar">GM</div>
+                <div class="user-info">
+                    <div class="name">Admin</div>
+                    <div class="role">Gestionnaire</div>
+                </div>
+            </div>
+        </div>
     </aside>
 
     <main class="main">
@@ -44,14 +68,16 @@ if ($searchTerm !== '') {
             <div class="joueur">
                 <h1>Joueurs</h1>
 
-                <form method="GET" action="../Controlleur/GestionFenetreJoueur.php" style="margin-bottom:16px;">
+                <!-- ADD PLAYER -->
+                <form method="GET" action="/Projet_R3.01/index.php" style="margin-bottom:16px;">
                     <input type="hidden" name="action" value="add">
-                    <button type="submit" style="padding:8px 14px; border-radius:8px; border:1px solid rgba(11,18,32,0.15); background:#fff; cursor:pointer;">
-                        ➕ Ajouter un joueur
-                    </button>
+                    <button type="submit">➕ Ajouter un joueur</button>
                 </form>
 
-                <form method="GET" class="rechercher">
+                <!-- SEARCH -->
+                <form method="GET" action="/Projet_R3.01/index.php" class="rechercher">
+                    <input type="hidden" name="action" value="joueurs">
+
                     <input
                         type="text"
                         name="search"
@@ -90,20 +116,18 @@ if ($searchTerm !== '') {
                                 <td>
                                     <div class="actions-group" style="display:flex; gap:6px;">
 
-                                        <form method="GET" action="../Controlleur/GestionFenetreJoueur.php">
+                                        <!-- EDIT -->
+                                        <form method="GET" action="/Projet_R3.01/index.php">
                                             <input type="hidden" name="action" value="edit">
                                             <input type="hidden" name="NumeroLicence" value="<?= htmlspecialchars($j['NumeroLicence']) ?>">
-                                            <button type="submit" style="padding:4px 8px; border-radius:6px; border:1px solid rgba(11,18,32,0.15); background:#fff; cursor:pointer;">
-                                                ✏️
-                                            </button>
+                                            <button type="submit">✏️</button>
                                         </form>
 
-                                        <form method="GET" action="../Controlleur/GestionFenetreJoueur.php" onsubmit="return confirm('Supprimer ce joueur ?');">
+                                        <!-- DELETE -->
+                                        <form method="GET" action="/Projet_R3.01/index.php" onsubmit="return confirm('Supprimer ce joueur ?');">
                                             <input type="hidden" name="action" value="delete">
                                             <input type="hidden" name="id" value="<?= htmlspecialchars($j['NumeroLicence']) ?>">
-                                            <button type="submit" style="padding:4px 8px; border-radius:6px; border:1px solid rgba(11,18,32,0.15); background:#fff; cursor:pointer;">
-                                                🗑️
-                                            </button>
+                                            <button type="submit">🗑️</button>
                                         </form>
 
                                     </div>

@@ -29,6 +29,9 @@
             <a class="nav-item" href="/Projet_R3.01/index.php?action=ajouterMatch">
                 <span>➕</span><span class="label">Ajouter Match</span>
             </a>
+            <a class="nav-item" href="/Projet_R3.01/index.php?action=statistiques">
+                <span>📊</span><span class="label">Statistiques</span>
+            </a>
         </nav>
 
         <div class="sidebar-footer">
