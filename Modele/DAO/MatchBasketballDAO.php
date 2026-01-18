@@ -1,20 +1,19 @@
 <?php
-require_once __DIR__ . '/../Joueur.class.php';
 require_once __DIR__ . '/../MatchBasketball.class.php';
-require_once __DIR__ . '/../Participer.class.php';
     class MatchBasketballDAO {
     private $linkpdo;
 
     public function __construct() {
         try {
-             $db = 'r301php2025_db';
-            $server = 'localhost';
-            $login = 'root';
-            $mdp = '';
-            $this->linkpdo = new PDO("mysql:host=$server;dbname=$db;charset=utf8", $login, $mdp);
-            $this->linkpdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch (Exception $e) {
-            die('Erreur : ' . $e->getMessage());
+            $db     = 'if0_40934572_XXX';
+            $server = 'sql112.infinityfree.com';
+            $login  = 'if0_40934572';
+            $mdp    = 'kgZTli4UVfsK';
+            $this->linkpdo = new PDO("mysql:host=$server;dbname=$db", $login, $mdp); 
+        }
+        catch (Exception $e) {
+             die('Erreur : ' . $e->getMessage()); 
+
         }
     }
 
@@ -46,7 +45,7 @@ require_once __DIR__ . '/../Participer.class.php';
     }
 
     public function getAllMatches(){
-        $req = $this->linkpdo->query("SELECT * FROM Match_Basketball ORDER BY DateDeMatch DESC");
+        $req = $this->linkpdo->query("SELECT * FROM Match_Basketball");
         $matches = [];
         while ($row = $req->fetch(PDO::FETCH_ASSOC)) {
         $matches[] = new MatchBasketball(
@@ -116,20 +115,17 @@ require_once __DIR__ . '/../Participer.class.php';
 
 }
 
-public function updateStatut($date, $heure, $nouveauStatut) {
-    $req = $this->linkpdo->prepare(
-        "UPDATE Match_Basketball 
-         SET Statut = :statut
-         WHERE DateDeMatch = :d AND HeureDeMatch = :heure"
-    );
-
-    return $req->execute([
-        ":statut" => $nouveauStatut,
-        ":d"   => $date,
-        ":heure"  => $heure
+public function updateStatut($matchId, $nouveauStatut) {
+    $sql = "UPDATE Match_Basketball 
+            SET Statut = :statut
+            WHERE MatchID = :id";
+    $stmt = $this->linkpdo->prepare($sql);
+    return $stmt->execute([
+        ':statut' => $nouveauStatut,
+        ':id' => $matchId
     ]);
-
 }
+
 
     public function updateResultat($date, $heure, $nouveauRes) {
         $req = $this->linkpdo->prepare(
@@ -185,56 +181,29 @@ public function updateStatut($date, $heure, $nouveauStatut) {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+      public function getMatchById($matchId) {
+        $sql = "SELECT NomEquipeAdversaire, DateDeMatch, HeureDeMatch, LieuDeRencontre
+                FROM Match_Basketball
+                WHERE MatchID = ?";
+        $stmt = $this->linkpdo->prepare($sql);
+        $stmt->execute([$matchId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     public function getMatchByDateHeure(string $date, string $heure): ?array {
-        $stmt = $this->linkpdo->prepare("
-            SELECT * FROM Match_Basketball
-            WHERE DateDeMatch = :d AND HeureDeMatch = :h
-        ");
-        $stmt->execute([
-            ':d' => $date,
-            ':h' => $heure
-        ]);
-        $match = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $match ?: null;
-    }
+    $sql = "
+        SELECT MatchID, NomEquipeAdversaire, DateDeMatch, HeureDeMatch, LieuDeRencontre,
+               Resultat, PointsMarquesParAdversaire, Statut
+        FROM Match_Basketball
+        WHERE DateDeMatch = ? AND HeureDeMatch = ?
+    ";
 
-    public function deleteMatchComplet(string $date, string $heure): bool {
-    try {
-        $this->linkpdo->beginTransaction();
-        $stmt = $this->linkpdo->prepare(
-            "SELECT MatchID FROM Match_Basketball 
-             WHERE DateDeMatch = :d AND HeureDeMatch = :h"
-        );
-        $stmt->execute([':d' => $date, ':h' => $heure]);
-        $match = $stmt->fetch(PDO::FETCH_ASSOC);
+    $stmt = $this->linkpdo->prepare($sql);
+    $stmt->execute([$date, $heure]);
+    $match = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if (!$match) {
-            $this->linkpdo->rollBack();
-            return false;
-        }
-        $matchId = $match['MatchID'];
-        $stmt = $this->linkpdo->prepare(
-            "DELETE FROM Participer WHERE MatchID = :mid"
-        );
-        $stmt->execute([':mid' => $matchId]);
-        $stmt = $this->linkpdo->prepare(
-            "DELETE FROM Match_Basketball WHERE MatchID = :mid"
-        );
-        $stmt->execute([':mid' => $matchId]);
-
-        $this->linkpdo->commit();
-        return true;
-
-    } catch (Exception $e) {
-        $this->linkpdo->rollBack();
-        return false;
-    }
+    return $match ?: null;
 }
-
-
-    
-
-
 
 
     }

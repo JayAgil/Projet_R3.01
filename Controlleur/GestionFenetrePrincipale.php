@@ -43,7 +43,7 @@ class GestionFenetrePrincipale {
     $heure = $_GET['heure'];
 
     $matchDAO = new MatchBasketballDAO();
-    $matchDAO->deleteMatchComplet($date, $heure);
+    $matchDAO->deleteMatch($date, $heure);
 
     header("Location: index.php?action=dashboard");
     exit;

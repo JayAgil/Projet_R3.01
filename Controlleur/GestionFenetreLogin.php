@@ -14,6 +14,7 @@
             
         }
 
+        // Verifier que le user existe dans la BD
         public function executer(){
             $mdp = $this->userDAO->getMdpByUsername($this->username);
             return password_verify($this->mdp,$mdp);
