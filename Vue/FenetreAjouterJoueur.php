@@ -11,7 +11,7 @@
 <div class="form-joueur">
     <h1>Ajouter un joueur</h1>
     
-    <form method="GET" action="../index.php">
+    <form method="GET" action="/Projet_R3.01/index.php">
         <input type="hidden" name="action" value="store">
         
         <div>
