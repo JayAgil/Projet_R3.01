@@ -92,10 +92,13 @@
                       <button type="submit" class="btn-action"><span>➕</span> Résultat</button>
                     </form>
 
-                   <form action="index.php" method="GET">
+                 <form action="index.php" method="GET" class="action-form">
     <input type="hidden" name="action" value="feuille">
     <input type="hidden" name="MatchID" value="<?= $m['MatchID'] ?>">
-    <button type="submit">Gérer la feuille</button>
+    <button type="submit" class="btn-action">
+        <span>📄</span> Feuille de Match
+    </button>
+</form>
 </form>
 
                   <form action="/Projet_R3.01/index.php" method="GET" class="action-form"

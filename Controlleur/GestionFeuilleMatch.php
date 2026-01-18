@@ -56,17 +56,19 @@ class GestionFeuilleMatch {
     $existing = $this->participerDAO->getExistingPlayers($this->matchId);
 
     // Organize existing data so the view can "pre-fill" the combo boxes
-    $currentSelection = ['titulars' => [], 'subs' => []];
-    foreach ($existing as $entry) {
-        if ($entry['EstTitulaire']) {
-            $currentSelection['titulars'][$entry['PosteOccupee']] = $entry['NumeroLicence'];
-        } else {
-            $currentSelection['subs'][] = [
-                'licence' => $entry['NumeroLicence'],
-                'pos' => $entry['PosteOccupee']
-            ];
-        }
+    // Inside GestionFeuilleMatch.php -> executer()
+$currentSelection = ['titulars' => [], 'subs' => []];
+foreach ($existing as $entry) {
+    if ($entry['EstTitulaire']) {
+        $currentSelection['titulars'][$entry['PosteOccupee']] = $entry['NumeroLicence'];
+    } else {
+        // We push them into the array. Index 0 will be sub 1, index 1 will be sub 2...
+        $currentSelection['subs'][] = [
+            'licence' => $entry['NumeroLicence'],
+            'pos' => $entry['PosteOccupee']
+        ];
     }
+}
 
     // --- 3. RENDER THE VIEW ---
     require_once __DIR__ . '/../Vue/feuilleDeMatch.php';
