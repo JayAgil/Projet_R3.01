@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../MatchBasketball.class.php';
     class MatchBasketballDAO {
     private $linkpdo;
 
@@ -152,7 +153,7 @@ public function updateStatut($date, $heure, $nouveauStatut) {
     
 
     public function getMoyennePointsAdversaire() {
-            $stmt = $this->pdo->query("
+            $stmt = $this->linkpdo->query("
                 SELECT AVG(PointsMarquesParAdversaire) AS MoyennePointsAdversaire
                 FROM Match_Basketball
             ");
@@ -160,7 +161,7 @@ public function updateStatut($date, $heure, $nouveauStatut) {
     }
 
     public function getMatchsAvenir() {
-            $stmt = $this->pdo->query("
+            $stmt = $this->linkpdo->query("
                 SELECT * 
                 FROM Match_Basketball
                 WHERE Statut IN ('Avenir','Prepare')
@@ -170,7 +171,7 @@ public function updateStatut($date, $heure, $nouveauStatut) {
     }
 
     public function getTopScorers() {
-        $stmt = $this->pdo->prepare("
+        $stmt = $this->linkpdo->prepare("
             SELECT j.NumeroLicence, j.Nom, j.Prenom, SUM(p.NbPointsMarque) AS TotalPoints
             FROM Participer p
             JOIN Joueur j ON p.NumeroLicence = j.NumeroLicence
