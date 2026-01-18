@@ -170,11 +170,5 @@
     </section>
   </main>
 </div>
-
-<script>
-  const btn = document.getElementById('btnToggle');
-  const sidebar = document.getElementById('sidebar');
-  btn.onclick = () => sidebar.classList.toggle('collapsed');
-</script>
 </body>
 </html>
