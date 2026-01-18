@@ -5,6 +5,9 @@ class JoueurDAO {
 
     private PDO $pdo;
 
+    /**
+     * Connecter à la BD avec PDO
+     */
     public function __construct() {
         try {
             $db     = 'if0_40934572_r301php2025_db';
@@ -21,9 +24,14 @@ class JoueurDAO {
         }
     }
 
+    /**
+     * Insère un nouveau joueur dans la base de données
+     *
+     * @param Joueur $j Objet Joueur à insérer
+     */
     public function insert(Joueur $j): void {
         $sql = "
-            INSERT INTO Joueur (
+            INSERT INTO joueur (
                 NumeroLicence,
                 Nom,
                 Prenom,
@@ -57,9 +65,14 @@ class JoueurDAO {
         ]);
     }
 
+    /**
+     * Met à jour les informations d'un joueur existant
+     *
+     * @param Joueur $j Objet Joueur contenant les nouvelles données
+     */
     public function update(Joueur $j): void {
         $sql = "
-            UPDATE Joueur
+            UPDATE joueur
             SET
                 Nom = :n,
                 Prenom = :p,
@@ -84,22 +97,38 @@ class JoueurDAO {
         ]);
     }
 
+    /**
+     * Supprime un joueur à partir de son numéro de licence
+     *
+     * @param string $numeroLicence Numéro de licence du joueur à supprimer
+     */
     public function delete(string $numeroLicence): void {
         $stmt = $this->pdo->prepare(
-            "DELETE FROM Joueur WHERE NumeroLicence = :nl"
+            "DELETE FROM joueur WHERE NumeroLicence = :nl"
         );
         $stmt->execute([':nl' => $numeroLicence]);
     }
 
+    /**
+     * Récupère tous les joueurs
+     *
+     * @return array Liste de tous les joueurs (tableau associatif)
+     */
     public function getAll(): array {
         return $this->pdo
-            ->query("SELECT * FROM Joueur")
+            ->query("SELECT * FROM joueur")
             ->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Recherche des joueurs à partir d'un terme (nom, prénom, licence ou statut)
+     *
+     * @param string $term Terme de recherche
+     * @return array Résultats de la recherche
+     */
     public function search(string $term): array {
         $stmt = $this->pdo->prepare("
-            SELECT * FROM Joueur
+            SELECT * FROM joueur
             WHERE Nom LIKE :term
                OR Prenom LIKE :term
                OR NumeroLicence LIKE :term
@@ -109,9 +138,15 @@ class JoueurDAO {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Récupère un joueur à partir de son numéro de licence
+     *
+     * @param string $numeroLicence Numéro de licence du joueur
+     * @return Joueur|null Objet Joueur ou null si non trouvé
+     */
     public function getById(string $numeroLicence): ?Joueur {
         $stmt = $this->pdo->prepare(
-            "SELECT * FROM Joueur WHERE NumeroLicence = ?"
+            "SELECT * FROM joueur WHERE NumeroLicence = ?"
         );
         $stmt->execute([$numeroLicence]);
 
@@ -132,19 +167,31 @@ class JoueurDAO {
         );
     }
 
+    /**
+     * Récupère la liste des joueurs actifs
+     *
+     * @return array Liste des joueurs actifs
+     */
     public function getActivePlayers(): array {
         try {
-            $sql = "SELECT * FROM Joueur WHERE Statut = 'Actif' ORDER BY Nom, Prenom";
+            $sql = "SELECT * FROM joueur WHERE Statut = 'Actif' ORDER BY Nom, Prenom";
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute();
             
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
+            // Enregistre l'erreur dans les logs sans interrompre l'application
             error_log("Error in getActivePlayers: " . $e->getMessage());
             return [];
         }
     }
 
+    /**
+     * Calcule et retourne les statistiques d'un joueur
+     *
+     * @param string $numeroLicence Numéro de licence du joueur
+     * @return array Statistiques du joueur
+     */
     public function getStatistiques(string $numeroLicence): array {
         $req = $this->pdo->prepare("
             SELECT 
@@ -165,6 +212,7 @@ class JoueurDAO {
         $req->execute([':licence' => $numeroLicence]);
         $result = $req->fetch(PDO::FETCH_ASSOC);
         
+        // Valeurs par défaut si aucune statistique n'est trouvée
         if (!$result) {
             return [
                 'selections_titulaire' => 0,
@@ -177,10 +225,12 @@ class JoueurDAO {
             ];
         }
         
+        // Calcul du pourcentage de victoires
         $pourcentageVictoires = $result['total_matchs'] > 0 
             ? round(($result['victoires'] / $result['total_matchs']) * 100, 1)
             : 0;
         
+        // Recherche du poste le plus souvent occupé
         $reqPoste = $this->pdo->prepare("
             SELECT PosteOccupee, COUNT(*) as freq
             FROM participer
@@ -194,6 +244,7 @@ class JoueurDAO {
         $poste = $reqPoste->fetch(PDO::FETCH_ASSOC);
         $posteOccupee = $poste ? $poste['PosteOccupee'] : 'N/A';
         
+        // Calcul du nombre de matchs consécutifs joués
         $reqConsecutive = $this->pdo->prepare("
             SELECT COUNT(*) as consecutives
             FROM (
@@ -221,10 +272,16 @@ class JoueurDAO {
         ];
     }
 
+    /**
+     * Récupère les joueurs ayant déjà occupé un poste donné
+     *
+     * @param string $position Poste recherché
+     * @return array Liste des joueurs correspondant au poste
+     */
     public function getJoueursByPosition(string $position): array {
         $stmt = $this->pdo->prepare("
             SELECT DISTINCT j.*
-            FROM Joueur j
+            FROM joueur j
             INNER JOIN participer p ON j.NumeroLicence = p.NumeroLicence
             WHERE p.PosteOccupee = :position
             ORDER BY j.Nom, j.Prenom
@@ -233,6 +290,11 @@ class JoueurDAO {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Récupère la liste de tous les postes distincts occupés
+     *
+     * @return array Liste des postes
+     */
     public function getAllPositions(): array {
         $stmt = $this->pdo->query("
             SELECT DISTINCT PosteOccupee
@@ -242,4 +304,5 @@ class JoueurDAO {
         ");
         return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
+
 }
