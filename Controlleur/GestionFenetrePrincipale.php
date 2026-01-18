@@ -27,5 +27,27 @@ class GestionFenetrePrincipale {
         extract($data);
         require "Vue/FenetrePrincipale.php";
     }
+
+    public function supprimerMatch() {
+    if (!isset($_SESSION['user'])) {
+        header("Location: index.php");
+        exit;
+    }
+
+    if (!isset($_GET['date'], $_GET['heure'])) {
+        header("Location: index.php?action=dashboard");
+        exit;
+    }
+
+    $date  = $_GET['date'];
+    $heure = $_GET['heure'];
+
+    $matchDAO = new MatchBasketballDAO();
+    $matchDAO->deleteMatchComplet($date, $heure);
+
+    header("Location: index.php?action=dashboard");
+    exit;
+}
+
 }
 ?>

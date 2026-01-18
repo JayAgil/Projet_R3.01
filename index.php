@@ -93,6 +93,12 @@ switch ($action) {
         session_destroy();
         header("Location: index.php");
         exit;
+
+    case 'supprimerMatch':
+        $gestion = new GestionFenetrePrincipale();
+        $gestion->supprimerMatch();
+        exit;
+
     default:
         header("Location: index.php?action=dashboard");
         exit;

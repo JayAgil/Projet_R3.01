@@ -198,6 +198,40 @@ public function updateStatut($date, $heure, $nouveauStatut) {
         return $match ?: null;
     }
 
+    public function deleteMatchComplet(string $date, string $heure): bool {
+    try {
+        $this->linkpdo->beginTransaction();
+        $stmt = $this->linkpdo->prepare(
+            "SELECT MatchID FROM Match_Basketball 
+             WHERE DateDeMatch = :d AND HeureDeMatch = :h"
+        );
+        $stmt->execute([':d' => $date, ':h' => $heure]);
+        $match = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$match) {
+            $this->linkpdo->rollBack();
+            return false;
+        }
+        $matchId = $match['MatchID'];
+        $stmt = $this->linkpdo->prepare(
+            "DELETE FROM Participer WHERE MatchID = :mid"
+        );
+        $stmt->execute([':mid' => $matchId]);
+        $stmt = $this->linkpdo->prepare(
+            "DELETE FROM Match_Basketball WHERE MatchID = :mid"
+        );
+        $stmt->execute([':mid' => $matchId]);
+
+        $this->linkpdo->commit();
+        return true;
+
+    } catch (Exception $e) {
+        $this->linkpdo->rollBack();
+        return false;
+    }
+}
+
+
     
 
 

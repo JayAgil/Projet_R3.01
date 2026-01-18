@@ -98,6 +98,17 @@
                       <input type="hidden" name="heure" value="<?= $m['HeureDeMatch'] ?>">
                       <button type="submit" class="btn-action"><span>📋</span> Feuille</button>
                   </form>
+
+                  <form action="/Projet_R3.01/index.php" method="GET" class="action-form"
+                        onsubmit="return confirm('Voulez-vous vraiment supprimer ce match ? Cette action est irréversible.')">
+                      <input type="hidden" name="action" value="supprimerMatch">
+                      <input type="hidden" name="date" value="<?= $m['DateDeMatch'] ?>">
+                      <input type="hidden" name="heure" value="<?= $m['HeureDeMatch'] ?>">
+                      <button type="submit" class="btn-action" style="border-color:#ef4444;color:#ef4444;">
+                          <span>🗑️</span> Supprimer
+                      </button>
+                  </form>
+
                   </div>
                 </td>
               </tr>
