@@ -7,11 +7,10 @@ class JoueurDAO {
 
     public function __construct() {
         try {
-            $db     = 'r301php2025_db';
-            $server = 'localhost';
-            $login  = 'root';
-            $mdp    = '';
-
+            $db     = 'if0_40934572_XXX';
+            $server = 'sql112.infinityfree.com';
+            $login  = 'if0_40934572';
+            $mdp    = 'kgZTli4UVfsK';
             $this->pdo = new PDO(
                 "mysql:host=$server;dbname=$db;charset=utf8",
                 $login,
