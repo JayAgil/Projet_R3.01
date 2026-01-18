@@ -1,4 +1,9 @@
 <?php
+/**
+ * Page de saisie du résultat d'un match
+ * Permet d'enregistrer le résultat et les statistiques des joueurs
+ */
+
 if (!isset($_SESSION['user'])) {
     header("Location: /index.php");
     exit;
@@ -19,6 +24,7 @@ if (!isset($_GET['date'], $_GET['heure'])) {
 $date  = $_GET['date'];
 $heure = $_GET['heure'];
 
+// Récupération des informations du match
 $match = $matchDAO->getMatchByDateHeure($date, $heure);
 if (!$match) {
     die("Match introuvable");
@@ -27,28 +33,31 @@ if (!$match) {
 $matchID = $match['MatchID'];
 $joueurs = $participerDAO->getJoueursParMatch($matchID);
 
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
+    // Récupération du résultat et des points adverses
     $resultat = $_POST['resultat'];
     $pointsAdv = (int) $_POST['points_adv'];
 
+    // Mise à jour du résultat et du statut du match
     $matchDAO->updateResultat($date, $heure, $resultat);
     $matchDAO->updateStatut($date, $heure, 'Termine');
 
     $matchID = $match['MatchID'];
 
+    // Enregistrement des statistiques pour chaque joueur
     foreach ($_POST['joueurs'] as $licence => $data) {
         $participerDAO->insertParticipationSimple(
             $licence,
             $matchID,
-            (int)$data['points'],
-            isset($data['titulaire']) ? 1 : 0,
-            isset($data['joue']) ? 1 : 0,
-            $data['note'] !== '' ? (float)$data['note'] : null
+            (int)$data['points'],                              
+            isset($data['titulaire']) ? 1 : 0,                
+            isset($data['joue']) ? 1 : 0,                      
+            $data['note'] !== '' ? (float)$data['note'] : null 
         );
     }
 
+    // Redirection vers la page d'accueil après enregistrement
     header("Location: index.php");
     exit;
 }
@@ -57,8 +66,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>Saisie Résultat</title>
+    <meta charset="UTF-8">
+    <title>Saisie Résultat</title>
     <link rel="stylesheet" href="css/principale.css">
     <link rel="stylesheet" href="css/resultat.css">
     <link rel="stylesheet" href="css/ajouterMatch.css">
@@ -66,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body>
 <div class="app">
-<aside class="sidebar" id="sidebar">
+    <aside class="sidebar" id="sidebar">
         <div class="brand">
             <svg class="logo" viewBox="0 0 24 24">
                 <path d="M3 3h8v8H3zM13 3h8v8h-8zM3 13h8v8H3zM13 13h8v8h-8z"/>
@@ -98,74 +107,97 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </aside>
 
-<div class="main">
-<div class="content">
+    <div class="main">
+        <div class="content">
 
-<h1>Saisie du résultat</h1>
+            <h1>Saisie du résultat</h1>
 
-<p class="muted">
-<?= $match['DateDeMatch'] ?> – <?= $match['HeureDeMatch'] ?><br>
-vs <?= htmlspecialchars($match['NomEquipeAdversaire']) ?>
-</p>
+            <!-- Informations du match -->
+            <p class="muted">
+                <?= $match['DateDeMatch'] ?> – <?= $match['HeureDeMatch'] ?><br>
+                vs <?= htmlspecialchars($match['NomEquipeAdversaire']) ?>
+            </p>
 
-<form method="POST">
+            <!-- Formulaire de saisie du résultat -->
+            <form method="POST">
 
-<div class="result-box">
-    <label>Résultat</label>
-    <select name="resultat" required>
-        <option value="Victoire">Victoire</option>
-        <option value="Defaite">Défaite</option>
-        <option value="Nul">Nul</option>
-    </select>
+                <!-- Section : Résultat global du match -->
+                <div class="result-box">
+                    <label>Résultat</label>
+                    <select name="resultat" required>
+                        <option value="Victoire">Victoire</option>
+                        <option value="Defaite">Défaite</option>
+                        <option value="Nul">Nul</option>
+                    </select>
 
-    <label>Points adverses</label>
-    <input type="number" name="points_adv" value="0" min="0" required>
-</div>
+                    <label>Points adverses</label>
+                    <input type="number" name="points_adv" value="0" min="0" required>
+                </div>
 
-<h2>Feuille de match</h2>
+                <h2>Feuille de match</h2>
 
-<table class="table">
-<thead>
-<tr>
-    <th>Joueur</th>
-    <th>Points</th>
-    <th>Est Titulaire</th>
-    <th>A joué</th>
-    <th>Note</th>
-</tr>
-</thead>
-<tbody>
-<?php foreach ($joueurs as $j): ?>
-<tr>
-    <td><?= htmlspecialchars($j['Nom'].' '.$j['Prenom']) ?></td>
-    <td>
-        <input type="number" name="joueurs[<?= $j['NumeroLicence'] ?>][points]" value="<?= $j['NbPointsMarque'] ?? 0 ?>" min="0">
-    </td>
-    <td>
-        <?= isset($j['EstTitulaire']) && $j['EstTitulaire'] ? '✔' : '❌' ?>
-    </td>
-    <td>
-        <?php if (isset($j['EstTitulaire']) && $j['EstTitulaire']): ?>
-            <input type="checkbox" name="joueurs[<?= $j['NumeroLicence'] ?>][joue]" <?= isset($j['Joue']) && $j['Joue'] ? 'checked' : '' ?>>
-        <?php else: ?>
-            <span style="color: gray;">N/A</span>
-        <?php endif; ?>
-    </td>
-    <td>
-        <input type="number" step="0.1" min="0" max="5"
-               name="joueurs[<?= $j['NumeroLicence'] ?>][note]" value="<?= $j['Note'] ?? '' ?>">
-    </td>
-</tr>
-<?php endforeach; ?>
-</tbody>
-</table>
+                <!-- Tableau des joueurs avec leurs statistiques -->
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Joueur</th>
+                            <th>Points</th>
+                            <th>Est Titulaire</th>
+                            <th>A joué</th>
+                            <th>Note</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($joueurs as $j): ?>
+                        <tr>
+                            <!-- Nom complet du joueur -->
+                            <td><?= htmlspecialchars($j['Nom'].' '.$j['Prenom']) ?></td>
+                            
+                            <!-- Points marqués par le joueur -->
+                            <td>
+                                <input type="number" 
+                                       name="joueurs[<?= $j['NumeroLicence'] ?>][points]" 
+                                       value="<?= $j['NbPointsMarque'] ?? 0 ?>" 
+                                       min="0">
+                            </td>
+                            
+                            <!-- Indicateur si titulaire -->
+                            <td>
+                                <?= isset($j['EstTitulaire']) && $j['EstTitulaire'] ? '✔' : '❌' ?>
+                            </td>
+                            
+                            <!-- Case à cocher "A joué" -->
+                            <td>
+                                <?php if (isset($j['EstTitulaire']) && $j['EstTitulaire']): ?>
+                                    <input type="checkbox" 
+                                           name="joueurs[<?= $j['NumeroLicence'] ?>][joue]" 
+                                           <?= isset($j['Joue']) && $j['Joue'] ? 'checked' : '' ?>>
+                                <?php else: ?>
+                                    <span style="color: gray;">N/A</span>
+                                <?php endif; ?>
+                            </td>
+                            
+                            <!-- Note du joueur -->
+                            <td>
+                                <input type="number" 
+                                       step="0.1" 
+                                       min="0" 
+                                       max="5"
+                                       name="joueurs[<?= $j['NumeroLicence'] ?>][note]" 
+                                       value="<?= $j['Note'] ?? '' ?>">
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
 
-<button class="btn-primary">💾 Enregistrer</button>
+                <!-- Bouton de soumission -->
+                <button class="btn-primary">💾 Enregistrer</button>
 
-</form>
+            </form>
 
-</div>
-</div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

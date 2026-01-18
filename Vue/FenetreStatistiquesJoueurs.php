@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="/Projet_R3.01/css/joueur.css">
 </head>
 <body>
-
 <div class="app">
     <aside class="sidebar" id="sidebar">
         <div class="brand">
@@ -18,7 +17,7 @@
             <span class="brand-text">Gestion Matchs</span>
             <button class="btn-toggle" id="btnToggle">☰</button>
         </div>
-
+        
         <nav class="nav">
             <a class="nav-item" href="/Projet_R3.01/index.php?action=dashboard">
                 <span>🏠</span><span class="label">Dashboard</span>
@@ -33,7 +32,7 @@
                 <span>📊</span><span class="label">Statistiques</span>
             </a>
         </nav>
-
+    
         <div class="sidebar-footer">
             <div class="user">
                 <div class="avatar">GM</div>
@@ -44,12 +43,13 @@
             </div>
         </div>
     </aside>
-
+    
     <main class="main">
         <section class="content">
             <div class="joueur">
                 <h1>Statistiques des Joueurs</h1>
-
+                
+                <!-- Tableau des statistiques -->
                 <table>
                     <thead>
                         <tr>
@@ -63,23 +63,38 @@
                             <th>Sél. Consécutives</th>
                         </tr>
                     </thead>
-
+                    
                     <tbody>
                         <?php foreach ($statistiques as $stat): ?>
                             <tr>
+                                <!-- Nom complet du joueur -->
                                 <td>
                                     <strong><?= htmlspecialchars($stat['Nom'] . ' ' . $stat['Prenom']) ?></strong>
                                 </td>
+                                
+                                <!-- Statut actuel (Actif, Blessé, etc.) -->
                                 <td><?= htmlspecialchars($stat['Statut']) ?></td>
+                                
+                                <!-- Poste le plus fréquemment occupé -->
                                 <td><?= htmlspecialchars($stat['PostePreferere'] ?? 'N/A') ?></td>
+                                
+                                <!-- Nombre de fois sélectionné comme titulaire -->
                                 <td><?= htmlspecialchars($stat['selections_titulaire']) ?></td>
+                                
+                                <!-- Nombre de fois sélectionné comme remplaçant -->
                                 <td><?= htmlspecialchars($stat['selections_remplacant']) ?></td>
+                                
+                                <!-- Moyenne des notes reçues (sur 5) -->
                                 <td><?= htmlspecialchars($stat['moyenne_evaluation']) ?>/5</td>
+                                
+                                <!-- Pourcentage de matchs gagnés lorsqu'il a participé -->
                                 <td><?= htmlspecialchars($stat['pourcentage_victoires']) ?>%</td>
+                                
+                                <!-- Nombre de sélections consécutives récentes -->
                                 <td><?= htmlspecialchars($stat['selections_consecutives']) ?></td>
                             </tr>
                         <?php endforeach; ?>
-
+                        
                         <?php if (empty($statistiques)): ?>
                             <tr>
                                 <td colspan="8" style="text-align:center; padding:20px; color:var(--muted);">
@@ -89,11 +104,9 @@
                         <?php endif; ?>
                     </tbody>
                 </table>
-
             </div>
         </section>
     </main>
 </div>
-
 </body>
 </html>
