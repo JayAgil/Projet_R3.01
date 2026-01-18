@@ -122,9 +122,8 @@ if ($searchTerm !== '') {
                                             <input type="hidden" name="NumeroLicence" value="<?= htmlspecialchars($j['NumeroLicence']) ?>">
                                             <button type="submit">✏️</button>
                                         </form>
-
-                                        <!-- DELETE -->
-                                        <form method="GET" action="/Projet_R3.01/index.php" onsubmit="return confirm('Supprimer ce joueur ?');">
+                                        
+                                        <form method="GET" action="/Projet_R3.01/index.php">
                                             <input type="hidden" name="action" value="delete">
                                             <input type="hidden" name="id" value="<?= htmlspecialchars($j['NumeroLicence']) ?>">
                                             <button type="submit">🗑️</button>
