@@ -61,39 +61,35 @@ class ParticiperDAO {
      * Logic for Feuille de Match: Saving and Redirecting
      */
     public function saveMatchSheet($matchId, $titulars, $substitutes) {
-        try {
-            $this->pdo->beginTransaction();
+    try {
+        $this->pdo->beginTransaction();
 
-            // 1. Remove old sheet for this match to allow updates
-            $stmt = $this->pdo->prepare("DELETE FROM Participer WHERE MatchID = ?");
-            $stmt->execute([$matchId]);
+        // Step A: Wipe existing data for this match to handle the "Update" logic
+        $delete = $this->pdo->prepare("DELETE FROM Participer WHERE MatchID = ?");
+        $delete->execute([$matchId]);
 
-            // 2. Insert new sheet
-            $sql = "INSERT INTO Participer (NumeroLicence, MatchID, PosteOccupee, EstTitulaire, Joue) 
-                    VALUES (?, ?, ?, ?, ?)";
-            $stmt = $this->pdo->prepare($sql);
+        // Step B: Prepare the insert statement
+        $sql = "INSERT INTO Participer (NumeroLicence, MatchID, PosteOccupee, EstTitulaire, Joue) 
+                VALUES (?, ?, ?, ?, 1)";
+        $stmt = $this->pdo->prepare($sql);
 
-            // Insert Titulars (Joue = 1)
-            foreach ($titulars as $pos => $licence) {
-                if(!empty($licence)) {
-                    $stmt->execute([$licence, $matchId, $pos, 1, 1]);
-                }
-            }
-
-            // Insert Substitutes (Joue = 0 or 1 depending on coach choice, here 0 for "on bench")
-            foreach ($substitutes as $sub) {
-                if(!empty($sub['licence'])) {
-                    $stmt->execute([$sub['licence'], $matchId, $sub['pos'], 0, 1]);
-                }
-            }
-
-            $this->pdo->commit();
-            return true;
-        } catch (Exception $e) {
-            $this->pdo->rollBack();
-            return false;
+        // Step C: Insert the 5 Starters (EstTitulaire = 1)
+        foreach ($titulars as $posCode => $licence) {
+            $stmt->execute([$licence, $matchId, $posCode, 1]);
         }
+
+        // Step D: Insert the Substitutes (EstTitulaire = 0)
+        foreach ($substitutes as $sub) {
+            $stmt->execute([$sub['licence'], $matchId, $sub['pos'], 0]);
+        }
+
+        $this->pdo->commit();
+        return true;
+    } catch (Exception $e) {
+        $this->pdo->rollBack();
+        return false;
     }
+}
 
     public function getRangJoueurPoints(): array {
         $sql = "SELECT NumeroLicence, SUM(NbPointsMarque) AS totalPoints
