@@ -70,7 +70,7 @@ class MatchBasketballDAO {
      */
     public function getAllMatches(){
         $req = $this->linkpdo->query("SELECT * FROM match_basketball");
-        $matches = []b
+        $matches = [];
         while ($row = $req->fetch(PDO::FETCH_ASSOC)) {
             $matches[] = new MatchBasketball(
                 $row['DateDeMatch'],
