@@ -4,7 +4,7 @@
 
     public function __construct() {
         try {
-            $db     = 'if0_40934572_XXX';
+            $db     = 'if0_40934572_r301php2025_db';
             $server = 'sql112.infinityfree.com';
             $login  = 'if0_40934572';
             $mdp    = 'kgZTli4UVfsK';
