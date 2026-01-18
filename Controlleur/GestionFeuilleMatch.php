@@ -20,10 +20,10 @@ class GestionFeuilleMatch {
         $error = "";
         $success = "";
 
-        // --- Fetch match info for top display ---
+        // -Recuperer les informations du match
         $matchInfo = $this->matchDAO->getMatchById($this->matchId);
 
-        // --- Initialize selections ---
+        // Affichage du titulaires et remplacants s'il y en a qui sont déjà enregistrés
         $currentSelection = ['titulars' => [], 'subs' => []];
         $existing = $this->participerDAO->getExistingPlayers($this->matchId);
 
@@ -40,10 +40,10 @@ class GestionFeuilleMatch {
             }
         }
 
-        // --- Handle POST ---
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // Collect titulars
+    // Recupérer les joueurs selectionnés comme titulaires
     $titulars = [
         'PG' => $_POST['titular_PG'] ?? '',
         'SG' => $_POST['titular_SG'] ?? '',
@@ -52,7 +52,7 @@ class GestionFeuilleMatch {
         'C'  => $_POST['titular_C'] ?? ''
     ];
 
-    // Collect subs
+    // Recupérer les joueurs selectionnés comme remplaçants
     $subs = [];
     if (isset($_POST['substitute_player'])) {
         foreach ($_POST['substitute_player'] as $index => $licence) {
@@ -65,20 +65,20 @@ class GestionFeuilleMatch {
         }
     }
 
-    // --- VALIDATION: ensure 5 distinct titulars ---
+    // Verifier qu'il y a bien 5 joueurs distincts comme titulaires
     $filledTitulars = array_filter($titulars);
     if (count($filledTitulars) < 5) {
         $error = "Erreur : Vous devez sélectionner 5 titulaires.";
     } elseif (count(array_unique($filledTitulars)) !== 5) {
         $error = "Erreur : Chaque titulaire doit être un joueur distinct.";
     } else {
-        // --- VALIDATION: ensure all selected (titular + subs) are unique ---
+        // Verifier que tous les joueurs selectionnés sont distincts
         $allSelected = array_merge(array_values($titulars), array_column($subs, 'licence'));
-        $filledSelected = array_filter($allSelected); // remove empty
+        $filledSelected = array_filter($allSelected); 
         if (count($filledSelected) !== count(array_unique($filledSelected))) {
             $error = "Erreur : Aucun joueur ne peut être choisi deux fois (titulaire + remplaçant).";
         } else {
-            // Save to DB
+            // Inserer dans la BD les titulaires et les remplaçants
             if ($this->participerDAO->saveMatchSheet($this->matchId, $titulars, $subs)) {
                 $success = "Feuille de match enregistrée avec succès !";
                 $this->matchDAO->updateStatut($this->matchId, 'Preparé');
@@ -90,16 +90,22 @@ class GestionFeuilleMatch {
         }
     }
 
-    // Keep currentSelection filled so the form keeps user's choices
+    // S'il y a une erreur, garder les joueurs selectionnés
     $currentSelection['titulars'] = $titulars;
     $currentSelection['subs'] = $subs;
 }
 
 
-        // --- Fetch players for combo boxes ---
+        // Recupérer tous les jouers actives
         $players = $this->joueurDAO->getActivePlayers();
 
-        // --- Render view ---
+        // Recupérer la dernière note de chaque joueur actif
+        $lastNotes = [];
+        foreach ($players as $p) {
+             $lastNotes[$p['NumeroLicence']] = $this->participerDAO->getLastNoteByPlayer($p['NumeroLicence']);
+        
+             }
+        // Affichage du vue
         require_once __DIR__ . '/../Vue/feuilleDeMatch.php';
     }
 }

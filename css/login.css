@@ -1,4 +1,3 @@
-/* Reset */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -10,16 +9,14 @@ body {
     height: 100vh;
 }
 
-/* Page container: 2 columns */
 .login-page {
     display: flex;
     height: 100vh;
 }
 
-/* Left side: background image + welcome text */
 .left-side {
-    flex: 66%; /* 2/3 of the page */
-    background-image: url('../Image/backgroundFenetreLogin.jpg'); /* change to your image */
+    flex: 66%; 
+    background-image: url('../Image/backgroundFenetreLogin.jpg'); 
     background-size: cover;
     background-position: center;
     display: flex;
@@ -42,7 +39,6 @@ body {
     font-size: 24px;
 }
 
-/* Right side: login form */
 .right-side {
     flex: 34%; 
     display: flex;
@@ -51,7 +47,6 @@ body {
     background-color: white;
 }
 
-/* Login container (unchanged) */
 .login-container {
     background-color: white;
     padding: 10px 40px 20px 40px;
@@ -60,7 +55,6 @@ body {
     width: 320px;
     text-align: center;
 
-    /* 3D effect */
     box-shadow: 5px 5px 15px rgba(0,0,0,0.3),
                 -3px -3px 10px rgba(255,255,255,0.5);
 }
@@ -89,7 +83,7 @@ body {
 .login-form input[type="submit"]:hover {
     background-color: darkorange;
 }
-/* Logo above the form */
+
 #logo {
     width: 150px;
     margin-bottom: 20px;
