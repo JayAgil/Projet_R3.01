@@ -1,16 +1,24 @@
 <?php
 require_once __DIR__ . '/../Modele/DAO/ParticiperDAO.php'; 
 require_once __DIR__ . '/../Modele/DAO/JoueurDAO.php';
+require_once __DIR__ . '/../Modele/DAO/MatchBasketballDAO.php';
+
 
 class GestionFeuilleMatch {
     private $joueurDAO;
     private $participerDAO;
     private $matchId;
+        private $matchInfo; // <-- store match info
+
 
     public function __construct($matchId) {
         $this->joueurDAO = new JoueurDAO();
         $this->participerDAO = new ParticiperDAO();
         $this->matchId = $matchId; 
+
+        $matchDAO = new MatchBasketballDAO();
+        $this->matchInfo = $matchDAO->getMatchById($this->matchId); // <-- assign to property
+       
     }
 
     public function executer() {
@@ -75,6 +83,8 @@ class GestionFeuilleMatch {
 
         // --- FETCH DATA FOR VIEW ---
         $players = $this->joueurDAO->getActivePlayers();
+
+                $matchInfo = $this->matchInfo;
 
         // --- RENDER VIEW ---
         require_once __DIR__ . '/../Vue/feuilleDeMatch.php';

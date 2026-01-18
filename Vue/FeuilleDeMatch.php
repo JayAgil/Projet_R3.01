@@ -7,6 +7,12 @@
 </head>
 <body>
 
+<div class="match-info">
+    <p><strong>Adversaire:</strong> <?= htmlspecialchars($matchInfo['NomEquipeAdversaire']) ?></p>
+    <p><strong>Date / Heure:</strong> <?= htmlspecialchars($matchInfo['DateDeMatch']) ?> <?= htmlspecialchars($matchInfo['HeureDeMatch']) ?></p>
+    <p><strong>Lieu:</strong> <?= htmlspecialchars($matchInfo['LieuDeRencontre']) ?></p>
+</div>
+
 <div class="container">
     <div class="left-panel">
         <h2>Joueurs actifs</h2>
