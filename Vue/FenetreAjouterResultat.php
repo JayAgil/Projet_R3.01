@@ -152,15 +152,13 @@ vs <?= htmlspecialchars($match['NomEquipeAdversaire']) ?>
         <?php endif; ?>
     </td>
     <td>
-        <input type="number" step="0.1" min="0" max="10"
+        <input type="number" step="0.1" min="0" max="5"
                name="joueurs[<?= $j['NumeroLicence'] ?>][note]" value="<?= $j['Note'] ?? '' ?>">
     </td>
 </tr>
 <?php endforeach; ?>
 </tbody>
 </table>
-
-
 
 <button class="btn-primary">💾 Enregistrer</button>
 
