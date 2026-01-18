@@ -47,15 +47,18 @@ switch ($action) {
         $controller->gererAction();
         exit;
     case 'feuille':
-        if (!empty($_GET['date']) && !empty($_GET['heure'])) {
-            $controller = new GestionFeuilleMatch($_GET['date'], $_GET['heure']);
-            $data = $controller->executer();
-            $players = $data['players'] ?? [];
-            require "Vue/FeuilleDeMatch.php";
-            exit;
-        } else {
-            die("Match non spécifié");
-        }
+    // Use MatchID as the primary identifier now
+    if (!empty($_GET['MatchID'])) {
+        $controller = new GestionFeuilleMatch($_GET['MatchID']);
+        
+        // This method handles the saving logic, data fetching, 
+        // AND it includes the View itself. 
+        $controller->executer(); 
+        
+        exit; // Important to stop double rendering
+    } else {
+        die("Erreur : ID du match (MatchID) non spécifié.");
+    }
     case 'ajouterResultat':
         if (!empty($_GET['date']) && !empty($_GET['heure'])) {
             require "Vue/FenetreAjouterResultat.php";

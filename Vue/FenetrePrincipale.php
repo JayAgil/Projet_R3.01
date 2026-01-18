@@ -92,12 +92,11 @@
                       <button type="submit" class="btn-action"><span>➕</span> Résultat</button>
                     </form>
 
-                   <form action="/Projet_R3.01/index.php" method="GET" class="action-form">
-                      <input type="hidden" name="action" value="feuille">
-                      <input type="hidden" name="date" value="<?= $m['DateDeMatch'] ?>">
-                      <input type="hidden" name="heure" value="<?= $m['HeureDeMatch'] ?>">
-                      <button type="submit" class="btn-action"><span>📋</span> Feuille</button>
-                  </form>
+                   <form action="index.php" method="GET">
+    <input type="hidden" name="action" value="feuille">
+    <input type="hidden" name="MatchID" value="<?= $m['MatchID'] ?>">
+    <button type="submit">Gérer la feuille</button>
+</form>
 
                   <form action="/Projet_R3.01/index.php" method="GET" class="action-form"
                         onsubmit="return confirm('Voulez-vous vraiment supprimer ce match ? Cette action est irréversible.')">

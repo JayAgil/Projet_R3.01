@@ -56,29 +56,33 @@ foreach($posMapping as $code => $name):
 
         <hr>
 
-        <h3>Remplaçants (Max 7)</h3>
-        <div class="substitutes-grid">
-            <?php for($i=0; $i < 7; $i++): 
-    $savedSub = $currentSelection['subs'][$i]['licence'] ?? '';
-    $savedPos = $currentSelection['subs'][$i]['pos'] ?? '';
-?>
+        <h3>Remplaçants</h3>
+<div class="substitutes-grid">
+    <?php for($i=0; $i < 7; $i++): 
+        $savedSub = $currentSelection['subs'][$i] ?? null;
+    ?>
     <div class="sub-entry">
         <select name="sub_target_pos[]">
-            <option value="">Position ?</option>
-            <?php foreach($posMapping as $code => $name): ?>
-                <option value="<?= $name ?>" <?= ($name == $savedPos) ? 'selected' : '' ?>><?= $name ?></option>
+            <option value="">Poste ciblé...</option>
+            <?php foreach(['PG','SG','SF','PF','C'] as $code): ?>
+                <option value="<?= $code ?>" <?= ($savedSub && $savedSub['pos'] == $code) ? 'selected' : '' ?>>
+                    <?= $code ?>
+                </option>
             <?php endforeach; ?>
         </select>
 
         <select name="substitute_player[]">
-            <option value="">Choisir Joueur</option>
+            <option value="">-- Choisir Remplaçant --</option>
             <?php foreach($players as $p): ?>
-                <option value="<?= $p['NumeroLicence'] ?>" <?= ($p['NumeroLicence'] == $savedSub) ? 'selected' : '' ?>>
+                <option value="<?= $p['NumeroLicence'] ?>" 
+                    <?= ($savedSub && $savedSub['licence'] == $p['NumeroLicence']) ? 'selected' : '' ?>>
                     <?= htmlspecialchars($p['Nom'].' '.$p['Prenom']) ?>
                 </option>
             <?php endforeach; ?>
         </select>
     </div>
+    <?php endfor; ?>
+</div>
 <?php endfor; ?>
         </div>
 
