@@ -1,19 +1,4 @@
 
-:root {
-  --text: #0b1220;
-  --muted: #64748b;
-  --shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-}
-
-
-body {
-  margin: 0;
-  padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background: #f8fafc;
-}
-
-
 .joueur {
   width: 100%;
 }
@@ -51,7 +36,7 @@ body {
   background: #fff;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: var(--shadow);
+  box-shadow: 0 6px 18px rgba(11, 18, 32, 0.06);
 }
 .joueur table th {
   text-align: left;
@@ -78,13 +63,14 @@ body {
   padding: 20px;
 }
 
+/* --- Forms for Ajouter / Modifier --- */
 .form-joueur {
   width: 100%;
   max-width: 600px;
   background: #fff;
   padding: 24px;
   border-radius: 12px;
-  box-shadow: var(--shadow);
+  box-shadow: 0 6px 18px rgba(11, 18, 32, 0.06);
   margin: 24px auto;
   font-family: sans-serif;
 }
@@ -142,12 +128,14 @@ body {
   background: #f1f5f9;
 }
 
+/* Buttons container */
 .form-buttons {
   display: flex;
   gap: 10px;
   margin-top: 14px;
 }
 
+/* Cancel link styling */
 .form-buttons a,
 .form-joueur a {
   display: inline-block;
@@ -167,6 +155,7 @@ body {
   background: #f1f5f9;
 }
 
+/* --- Responsive --- */
 @media (max-width: 880px) {
   .rechercher {
     flex-direction: column;

@@ -15,8 +15,7 @@ class JoueurDAO {
             $this->pdo = new PDO(
                 "mysql:host=$server;dbname=$db;charset=utf8",
                 $login,
-                $mdp,
-                [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+                $mdp
             );
         } catch (PDOException $e) {
             die('Erreur de connexion : ' . $e->getMessage());
@@ -52,8 +51,8 @@ class JoueurDAO {
             ':n'  => $j->getNom(),
             ':p'  => $j->getPrenom(),
             ':dn' => $j->getDateNaissance(),
-            ':t'  => $j->getTaille(),      
-            ':pd' => $j->getPoids(),      
+            ':t'  => $j->getTaille(),
+            ':pd' => $j->getPoids(),
             ':s'  => $j->getStatut(),
             ':c'  => $j->getCommentaire()
         ]);
@@ -134,94 +133,114 @@ class JoueurDAO {
         );
     }
 
-public function getActivePlayers() {
-    try {
-        $sql = "SELECT * FROM Joueur WHERE Statut = 'Actif' ORDER BY Nom, Prenom";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute();
-        
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch (PDOException $e) {
-        error_log("Error in getActivePlayers: " . $e->getMessage());
-        return [];
+    public function getActivePlayers(): array {
+        try {
+            $sql = "SELECT * FROM Joueur WHERE Statut = 'Actif' ORDER BY Nom, Prenom";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute();
+            
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error in getActivePlayers: " . $e->getMessage());
+            return [];
+        }
     }
-}
 
-public function getStatistiques($numeroLicence) {
-    $req = $this->pdo->prepare("
-        SELECT 
-            j.Statut,
-            j.Prenom as PostePreferere,
-            COUNT(CASE WHEN p.EstTitulaire = 1 THEN 1 END) as selections_titulaire,
-            COUNT(CASE WHEN p.EstTitulaire = 0 THEN 1 END) as selections_remplacant,
-            AVG(p.Note) as moyenne_evaluation,
-            COUNT(p.NumeroLicence) as total_matchs,
-            SUM(CASE WHEN m.Resultat = 'Victoire' THEN 1 ELSE 0 END) as victoires
-        FROM joueur j
-        LEFT JOIN participer p ON j.NumeroLicence = p.NumeroLicence
-        LEFT JOIN match_basketball m ON p.MatchID = m.MatchID
-        WHERE j.NumeroLicence = :licence
-        GROUP BY j.NumeroLicence, j.Statut, j.Prenom
-    ");
-    
-    $req->execute([':licence' => $numeroLicence]);
-    $result = $req->fetch(PDO::FETCH_ASSOC);
-    
-    if (!$result) {
+    public function getStatistiques(string $numeroLicence): array {
+        $req = $this->pdo->prepare("
+            SELECT 
+                j.Statut,
+                j.Prenom as PostePreferere,
+                COUNT(CASE WHEN p.EstTitulaire = 1 THEN 1 END) as selections_titulaire,
+                COUNT(CASE WHEN p.EstTitulaire = 0 THEN 1 END) as selections_remplacant,
+                AVG(p.Note) as moyenne_evaluation,
+                COUNT(p.NumeroLicence) as total_matchs,
+                SUM(CASE WHEN m.Resultat = 'Victoire' THEN 1 ELSE 0 END) as victoires
+            FROM joueur j
+            LEFT JOIN participer p ON j.NumeroLicence = p.NumeroLicence
+            LEFT JOIN match_basketball m ON p.MatchID = m.MatchID
+            WHERE j.NumeroLicence = :licence
+            GROUP BY j.NumeroLicence, j.Statut, j.Prenom
+        ");
+        
+        $req->execute([':licence' => $numeroLicence]);
+        $result = $req->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$result) {
+            return [
+                'selections_titulaire' => 0,
+                'selections_remplacant' => 0,
+                'moyenne_evaluation' => 0,
+                'pourcentage_victoires' => 0,
+                'selections_consecutives' => 0,
+                'PostePreferere' => 'N/A',
+                'PosteOccupee' => 'N/A'
+            ];
+        }
+        
+        $pourcentageVictoires = $result['total_matchs'] > 0 
+            ? round(($result['victoires'] / $result['total_matchs']) * 100, 1)
+            : 0;
+        
+        $reqPoste = $this->pdo->prepare("
+            SELECT PosteOccupee, COUNT(*) as freq
+            FROM participer
+            WHERE NumeroLicence = :licence
+            AND PosteOccupee IS NOT NULL
+            GROUP BY PosteOccupee
+            ORDER BY freq DESC
+            LIMIT 1
+        ");
+        $reqPoste->execute([':licence' => $numeroLicence]);
+        $poste = $reqPoste->fetch(PDO::FETCH_ASSOC);
+        $posteOccupee = $poste ? $poste['PosteOccupee'] : 'N/A';
+        
+        $reqConsecutive = $this->pdo->prepare("
+            SELECT COUNT(*) as consecutives
+            FROM (
+                SELECT m.MatchID
+                FROM match_basketball m
+                WHERE m.DateDeMatch <= CURDATE()
+                ORDER BY m.DateDeMatch DESC, m.HeureDeMatch DESC
+                LIMIT 10
+            ) recent_matches
+            INNER JOIN participer p ON recent_matches.MatchID = p.MatchID
+            WHERE p.NumeroLicence = :licence
+            AND p.Joue = 1
+        ");
+        
+        $reqConsecutive->execute([':licence' => $numeroLicence]);
+        $consecutive = $reqConsecutive->fetch(PDO::FETCH_ASSOC)['consecutives'] ?? 0;
+        
         return [
-            'selections_titulaire' => 0,
-            'selections_remplacant' => 0,
-            'moyenne_evaluation' => 0,
-            'pourcentage_victoires' => 0,
-            'selections_consecutives' => 0,
-            'PostePreferere' => 'N/A',
-            'PosteOccupee' => 'N/A'
+            'selections_titulaire' => (int)$result['selections_titulaire'],
+            'selections_remplacant' => (int)$result['selections_remplacant'],
+            'moyenne_evaluation' => $result['moyenne_evaluation'] ? round($result['moyenne_evaluation'], 2) : 0,
+            'pourcentage_victoires' => $pourcentageVictoires,
+            'selections_consecutives' => $consecutive,
+            'PostePreferere' => $posteOccupee
         ];
     }
-    
-    $pourcentageVictoires = $result['total_matchs'] > 0 
-        ? round(($result['victoires'] / $result['total_matchs']) * 100, 1)
-        : 0;
-    
-    $reqPoste = $this->pdo->prepare("
-        SELECT PosteOccupee, COUNT(*) as freq
-        FROM participer
-        WHERE NumeroLicence = :licence
-        AND PosteOccupee IS NOT NULL
-        GROUP BY PosteOccupee
-        ORDER BY freq DESC
-        LIMIT 1
-    ");
-    $reqPoste->execute([':licence' => $numeroLicence]);
-    $poste = $reqPoste->fetch(PDO::FETCH_ASSOC);
-    $posteOccupee = $poste ? $poste['PosteOccupee'] : 'N/A';
-    
-    $reqConsecutive = $this->pdo->prepare("
-        SELECT COUNT(*) as consecutives
-        FROM (
-            SELECT m.MatchID
-            FROM match_basketball m
-            WHERE m.DateDeMatch <= CURDATE()
-            ORDER BY m.DateDeMatch DESC, m.HeureDeMatch DESC
-            LIMIT 10
-        ) recent_matches
-        INNER JOIN participer p ON recent_matches.MatchID = p.MatchID
-        WHERE p.NumeroLicence = :licence
-        AND p.Joue = 1
-    ");
-    
-    $reqConsecutive->execute([':licence' => $numeroLicence]);
-    $consecutive = $reqConsecutive->fetch(PDO::FETCH_ASSOC)['consecutives'] ?? 0;
-    
-    return [
-        'selections_titulaire' => (int)$result['selections_titulaire'],
-        'selections_remplacant' => (int)$result['selections_remplacant'],
-        'moyenne_evaluation' => $result['moyenne_evaluation'] ? round($result['moyenne_evaluation'], 2) : 0,
-        'pourcentage_victoires' => $pourcentageVictoires,
-        'selections_consecutives' => $consecutive,
-        'PostePreferere' => $posteOccupee
-    ];
-}
 
+    public function getJoueursByPosition(string $position): array {
+        $stmt = $this->pdo->prepare("
+            SELECT DISTINCT j.*
+            FROM Joueur j
+            INNER JOIN participer p ON j.NumeroLicence = p.NumeroLicence
+            WHERE p.PosteOccupee = :position
+            ORDER BY j.Nom, j.Prenom
+        ");
+        $stmt->execute([':position' => $position]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
+    public function getAllPositions(): array {
+        $stmt = $this->pdo->query("
+            SELECT DISTINCT PosteOccupee
+            FROM participer
+            WHERE PosteOccupee IS NOT NULL
+            ORDER BY PosteOccupee
+        ");
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
 }

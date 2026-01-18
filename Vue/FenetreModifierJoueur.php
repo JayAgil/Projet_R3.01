@@ -15,7 +15,7 @@
         <p>Erreur : joueur introuvable.</p>
         <a href="../index.php?action=joueurs">Retour à la liste</a>
     <?php else: ?>
-        <form method="GET" action="../index.php">
+        <form method="GET" action="/Projet_R3.01/index.php">
             <input type="hidden" name="action" value="update">
             <input type="hidden" name="NumeroLicence" value="<?= htmlspecialchars($joueur->getNumeroLicence()) ?>">
             

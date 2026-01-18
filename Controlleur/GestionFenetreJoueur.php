@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../Modele/DAO/JoueurDAO.php';
+require_once __DIR__ . '/../Modele/Joueur.class.php';
 
 class GestionFenetreJoueur {
     private JoueurDAO $joueurDAO;
@@ -42,12 +43,13 @@ class GestionFenetreJoueur {
             $_GET['NumeroLicence'] ?? '',
             $_GET['Nom'] ?? '',
             $_GET['Prenom'] ?? '',
-            $_GET['DateDeNaissance'] ?? '',
+            $_GET['DateDeNaissance'] ?? null,
             $_GET['Taille_cm'] ?? 0,
             $_GET['Poids_kg'] ?? 0,
             $_GET['Statut'] ?? '',
             $_GET['Commentaire'] ?? ''
         );
+    
         $this->joueurDAO->insert($nouveauJoueur);
         header('Location: /Projet_R3.01/index.php?action=joueurs');
         exit;
@@ -72,16 +74,19 @@ class GestionFenetreJoueur {
             echo 'Erreur : numéro de licence manquant.';
             exit;
         }
+        
+        // ✅ FIXED: Now passing all 8 parameters
         $joueurModifie = new Joueur(
             $_GET['NumeroLicence'],
             $_GET['Nom'] ?? '',
             $_GET['Prenom'] ?? '',
-            $_GET['DateDeNaissance'] ?? '',
+            $_GET['DateDeNaissance'] ?? null,
             $_GET['Taille_cm'] ?? 0,
             $_GET['Poids_kg'] ?? 0,
             $_GET['Statut'] ?? '',
             $_GET['Commentaire'] ?? ''
         );
+        
         $this->joueurDAO->update($joueurModifie);
         header('Location: /Projet_R3.01/index.php?action=joueurs');
         exit;
@@ -102,7 +107,7 @@ class GestionFenetreJoueur {
         require __DIR__ . '/../Vue/FenetreJoueur.php';
         exit;
     }
-
+    
     public function afficherStatistiquesJoueurs() {
         $joueurs = $this->joueurDAO->getAll();
         $statistiques = [];
@@ -113,5 +118,5 @@ class GestionFenetreJoueur {
     
         require __DIR__ . '/../Vue/FenetreStatistiquesJoueurs.php';
         exit;
-}
+    }
 }
