@@ -92,9 +92,16 @@
                 <?php endfor; ?>
             </div>
 
-            <button type="submit" style="margin-top: 20px;">Enregistrer la feuille</button>
+                <div class="form-buttons">
+                    <button type="button" class="btn-back" onclick="window.location.href='index.php?action=principale'">
+                Retour
+            </button> 
+                <button type="submit" class="btn-save">Enregistrer la feuille</button>
+                   </div>
+
         </form>
 
+         
         <?php if (!empty($error)) echo "<p style='color:red;'>$error</p>"; ?>
         <?php if (!empty($success)) echo "<p style='color:green;'>$success</p>"; ?>
     </div>

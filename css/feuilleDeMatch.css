@@ -146,9 +146,57 @@ hr {
     padding: 12px 16px;
     margin-bottom: 20px;
     border-radius: 8px;
+
+    /* NEW: full width of container */
+    max-width: 1250px;  /* same as .container max-width */
+    margin: 0 auto 20px auto;  /* center it and keep bottom margin */
 }
 
 .match-info p {
     margin: 6px 0;
     font-size: 14px;
+}
+
+/* Container for buttons */
+.form-buttons {
+    display: flex;
+    gap: 15px;       /* space between buttons */
+    margin-top: 20px;
+}
+
+/* Save button */
+.btn-save {
+    flex: 1;         /* take equal space as the other button */
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.3s ease;
+}
+
+.btn-save:hover {
+    background-color: #219150;
+}
+
+/* Retour button */
+.btn-back {
+    flex: 1;         /* same width as save button */
+    display: inline-block;
+    padding: 15px;
+    background-color: #6c757d;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    text-align: center;
+    transition: background 0.3s ease;
+}
+
+.btn-back:hover {
+    background-color: #5a6268;
 }
