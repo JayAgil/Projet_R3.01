@@ -106,7 +106,7 @@ class GestionFeuilleMatch {
         
              }
         // Affichage du vue
-        require_once __DIR__ . '/../Vue/feuilleDeMatch.php';
+        require_once __DIR__ . '/../Vue/FeuilleDeMatch.php';
     }
 }
 ?>
