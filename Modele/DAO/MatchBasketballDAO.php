@@ -115,20 +115,17 @@ require_once __DIR__ . '/../MatchBasketball.class.php';
 
 }
 
-public function updateStatut($date, $heure, $nouveauStatut) {
-    $req = $this->linkpdo->prepare(
-        "UPDATE Match_Basketball 
-         SET Statut = :statut
-         WHERE DateDeMatch = :d AND HeureDeMatch = :heure"
-    );
-
-    return $req->execute([
-        ":statut" => $nouveauStatut,
-        ":d"   => $date,
-        ":heure"  => $heure
+public function updateStatut($matchId, $nouveauStatut) {
+    $sql = "UPDATE Match_Basketball 
+            SET Statut = :statut
+            WHERE MatchID = :id";
+    $stmt = $this->linkpdo->prepare($sql);
+    return $stmt->execute([
+        ':statut' => $nouveauStatut,
+        ':id' => $matchId
     ]);
-
 }
+
 
     public function updateResultat($date, $heure, $nouveauRes) {
         $req = $this->linkpdo->prepare(

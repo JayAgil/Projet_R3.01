@@ -111,5 +111,21 @@ class ParticiperDAO {
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+   // ParticiperDAO.php
+   public function getLastNoteByPlayer($numeroLicence) {
+        $sql = "SELECT p.Note
+                FROM Participer p
+                JOIN Match_Basketball m ON p.MatchID = m.MatchID
+                WHERE p.NumeroLicence = :num
+                AND p.Note IS NOT NULL
+                ORDER BY m.DateDeMatch DESC, m.HeureDeMatch DESC
+                LIMIT 1";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([':num' => $numeroLicence]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row['Note'] ?? null; // return null if no note exists
     }
+
+}
 ?>

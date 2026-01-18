@@ -8,7 +8,7 @@
 <body>
 
 <div class="login-page">
-    <!-- Left side: background image + welcome text -->
+
     <div class="left-side">
         <div class="welcome-text">
             <h1>Bienvenue !</h1>
@@ -16,7 +16,7 @@
         </div>
     </div>
 
-    <!-- Right side: login form + logo -->
+    <!-- Formulaire pour se connecter -->
     <div class="right-side">
         <div class="login-container">
             <img id="logo" src="Image/logoEquipe.jpg" alt="Logo Equipe">
@@ -28,13 +28,13 @@
             </form>
         </div>
     </div>
+
 </div>
 
+<!-- Affichage d'erreur -->
 <?php if (!empty($erreur)) : ?>
     <p><?php echo $erreur ?></p>
 <?php endif; ?>
-<?php
-    echo password_hash('1234',PASSWORD_DEFAULT);
-?>
+
 </body>
 </html>
