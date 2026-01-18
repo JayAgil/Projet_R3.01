@@ -1,4 +1,9 @@
 <?php
+/**
+ * Page de gestion des joueurs
+ * Affiche la liste complète des joueurs avec recherche et actions CRUD
+ */
+
 require_once __DIR__ . '/../Modele/DAO/MatchBasketballDAO.php';
 require_once __DIR__ . '/../Modele/DAO/JoueurDAO.php';
 require_once __DIR__ . '/../Modele/DAO/ParticiperDAO.php';
@@ -68,16 +73,14 @@ if ($searchTerm !== '') {
             <div class="joueur">
                 <h1>Joueurs</h1>
 
-                <!-- ADD PLAYER -->
+                <!-- Formulaire d'ajout d'un nouveau joueur -->
                 <form method="GET" action="/Projet_R3.01/index.php" style="margin-bottom:16px;">
                     <input type="hidden" name="action" value="add">
                     <button type="submit">➕ Ajouter un joueur</button>
                 </form>
 
-                <!-- SEARCH -->
                 <form method="GET" action="/Projet_R3.01/index.php" class="rechercher">
                     <input type="hidden" name="action" value="joueurs">
-
                     <input
                         type="text"
                         name="search"
@@ -87,6 +90,7 @@ if ($searchTerm !== '') {
                     <button type="submit">Filtrer</button>
                 </form>
 
+                <!-- Tableau des joueurs -->
                 <table>
                     <thead>
                         <tr>
@@ -102,6 +106,7 @@ if ($searchTerm !== '') {
                         </tr>
                     </thead>
 
+                    <!-- Lignes des joueurs -->
                     <tbody>
                         <?php foreach ($joueurs as $j): ?>
                             <tr>
@@ -113,16 +118,19 @@ if ($searchTerm !== '') {
                                 <td><?= htmlspecialchars($j['Poids_kg']) ?></td>
                                 <td><?= htmlspecialchars($j['Statut']) ?></td>
                                 <td><?= htmlspecialchars($j['Commentaire']) ?></td>
+                                
+                                <!-- Boutons d'action (Modifier / Supprimer) -->
                                 <td>
                                     <div class="actions-group" style="display:flex; gap:6px;">
-
-                                        <!-- EDIT -->
+                                        
+                                        <!-- Bouton Modifier -->
                                         <form method="GET" action="/Projet_R3.01/index.php">
                                             <input type="hidden" name="action" value="edit">
                                             <input type="hidden" name="NumeroLicence" value="<?= htmlspecialchars($j['NumeroLicence']) ?>">
                                             <button type="submit">✏️</button>
                                         </form>
                                         
+                                        <!-- Bouton Supprimer -->
                                         <form method="GET" action="/Projet_R3.01/index.php">
                                             <input type="hidden" name="action" value="delete">
                                             <input type="hidden" name="id" value="<?= htmlspecialchars($j['NumeroLicence']) ?>">
@@ -134,6 +142,7 @@ if ($searchTerm !== '') {
                             </tr>
                         <?php endforeach; ?>
 
+                        <!-- Message si aucun joueur trouvé -->
                         <?php if (empty($joueurs)): ?>
                             <tr>
                                 <td colspan="9" style="text-align:center; padding:20px; color:var(--muted);">
