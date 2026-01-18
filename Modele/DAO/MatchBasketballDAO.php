@@ -46,7 +46,7 @@ require_once __DIR__ . '/../Participer.class.php';
     }
 
     public function getAllMatches(){
-        $req = $this->linkpdo->query("SELECT * FROM Match_Basketball");
+        $req = $this->linkpdo->query("SELECT * FROM Match_Basketball ORDER BY DateDeMatch DESC");
         $matches = [];
         while ($row = $req->fetch(PDO::FETCH_ASSOC)) {
         $matches[] = new MatchBasketball(

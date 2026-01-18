@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         );
     }
 
-    header("Location: FenetrePrincipale.php");
+    header("Location: index.php");
     exit;
 }
 ?>
